@@ -1,0 +1,15 @@
+﻿[14:23:15]<?xml version="1.0"?>
+<string>person:</string>
+[14:23:20]<?xml version="1.0"?>
+<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+[14:23:25]<?xml version="1.0"?>
+<string>person:</string>
+[14:24:00]<?xml version="1.0"?>
+<string>person:</string>
+[14:24:03]<?xml version="1.0"?>
+<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+[14:27:28]person:
+[14:27:29]<?xml version="1.0"?>
+<person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+[14:27:31]2
+[14:27:31]0.5

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="E:\website\testdb" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="配置文件1" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/slExample.Web.dll" publishTime="03/16/2012 16:56:00" />
+    <file relUrl="Web.config" publishTime="03/16/2012 17:01:19" />
+    <file relUrl="bin/DoNet.Common.Web.pdb" publishTime="03/16/2012 15:18:48" />
+    <file relUrl="bin/System.Data.OracleClient.dll" publishTime="03/18/2010 19:31:26" />
+    <file relUrl="bin/MySql.Data.dll" publishTime="11/10/2011 10:52:26" />
+    <file relUrl="bin/DoNet.Common.Web.dll" publishTime="03/16/2012 15:18:48" />
+    <file relUrl="bin/DoNet.Common.dll" publishTime="03/16/2012 15:18:48" />
+    <file relUrl="ClientBin/slExample.xap" publishTime="03/16/2012 15:18:59" />
+    <file relUrl="slExampleTestPage.html" publishTime="02/24/2012 14:50:11" />
+    <file relUrl="bin/DoNet.Common.DbUtility.dll" publishTime="03/16/2012 16:55:12" />
+    <file relUrl="bin/DoNet.Common.pdb" publishTime="03/16/2012 15:18:48" />
+    <file relUrl="bin/DoNet.Common.DbUtility.pdb" publishTime="03/16/2012 16:55:11" />
+    <file relUrl="slExampleTestPage.aspx" publishTime="02/24/2012 14:49:55" />
+    <file relUrl="bin/slExample.Web.pdb" publishTime="03/16/2012 16:56:00" />
+    <file relUrl="Silverlight.js" publishTime="12/29/2011 16:54:59" />
+    <file relUrl="DBTester.aspx" publishTime="03/16/2012 16:55:10" />
+  </publishProfile>
+</publishData>

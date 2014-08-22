@@ -1,0 +1,10 @@
+C:\Users\fefeding\Desktop\freesilverlightchart-13347\FreeSilverlightChart\ClientBin\FreeSilverlightChart.dll
+C:\Users\fefeding\Desktop\freesilverlightchart-13347\FreeSilverlightChart\ClientBin\FreeSilverlightChart.pdb
+C:\Users\fefeding\Desktop\freesilverlightchart-13347\FreeSilverlightChart\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\fefeding\Desktop\freesilverlightchart-13347\FreeSilverlightChart\obj\Debug\FreeSilverlightChart.dll
+C:\Users\fefeding\Desktop\freesilverlightchart-13347\FreeSilverlightChart\obj\Debug\FreeSilverlightChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Debug\ResolveAssemblyReference.cache
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Debug\FreeSilverlightChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Debug\FreeSilverlightChart.pdb

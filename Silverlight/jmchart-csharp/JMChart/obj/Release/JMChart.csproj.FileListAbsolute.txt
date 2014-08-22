@@ -1,0 +1,15 @@
+F:\项目\jiamao\DoNet.Common\JMChart\Bin\Release\JMChart.dll
+F:\项目\jiamao\DoNet.Common\JMChart\Bin\Release\JMChart.pdb
+F:\项目\jiamao\DoNet.Common\JMChart\obj\Release\ResolveAssemblyReference.cache
+F:\项目\jiamao\DoNet.Common\JMChart\obj\Release\Chart.g.i.cs
+F:\项目\jiamao\DoNet.Common\JMChart\obj\Release\JMChart.g.resources
+F:\项目\jiamao\DoNet.Common\JMChart\obj\Release\JMChart.dll
+F:\项目\jiamao\DoNet.Common\JMChart\obj\Release\JMChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\Bin\Release\JMChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\Bin\Release\JMChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\ResolveAssemblyReference.cache
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\Chart.g.i.cs
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\JMChart.g.resources
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\JMChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\JMChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\JMChart\obj\Release\Common\PropertyBindingControl.g.i.cs

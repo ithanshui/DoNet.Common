@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="E:\website\dbproxy" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="配置文件1" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/DoNet.Common.dll" publishTime="04/11/2012 13:38:19" />
+    <file relUrl="bin/DoNet.Common.Web.pdb" publishTime="04/11/2012 13:38:20" />
+    <file relUrl="bin/DoNet.Common.pdb" publishTime="04/11/2012 13:38:19" />
+    <file relUrl="Global.asax" publishTime="04/11/2012 13:34:09" />
+    <file relUrl="Web.config" publishTime="03/23/2012 16:21:48" />
+    <file relUrl="DBProxy.svc" publishTime="03/23/2012 16:22:30" />
+    <file relUrl="bin/DoNet.Common.DbUtilityProxy.dll" publishTime="04/11/2012 13:38:21" />
+    <file relUrl="bin/DoNet.Common.DbUtilityProxy.pdb" publishTime="04/11/2012 13:38:21" />
+    <file relUrl="bin/DoNet.Common.DbUtility.dll" publishTime="04/11/2012 13:38:20" />
+    <file relUrl="bin/DoNet.Common.DbUtility.pdb" publishTime="04/11/2012 13:38:20" />
+    <file relUrl="bin/DoNet.Common.Web.dll" publishTime="04/11/2012 13:38:20" />
+  </publishProfile>
+</publishData>

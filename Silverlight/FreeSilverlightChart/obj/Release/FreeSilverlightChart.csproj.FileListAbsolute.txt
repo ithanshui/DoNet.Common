@@ -1,0 +1,10 @@
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.pdb
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\ResolveAssemblyReference.cache
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\FreeSilverlightChart.dll
+F:\项目\jiamao\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\FreeSilverlightChart.pdb
+D:\项目\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.dll
+D:\项目\DoNet.Common\Silverlight\FreeSilverlightChart\ClientBin\FreeSilverlightChart.pdb
+D:\项目\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\ResolveAssemblyReference.cache
+D:\项目\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\FreeSilverlightChart.dll
+D:\项目\DoNet.Common\Silverlight\FreeSilverlightChart\obj\Release\FreeSilverlightChart.pdb
