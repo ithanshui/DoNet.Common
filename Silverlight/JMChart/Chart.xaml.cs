@@ -29,10 +29,11 @@ namespace JMChart
             
             chartCanvas.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
             chartCanvas.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-            chartCanvas.Margin = new Thickness(24);
+            //chartCanvas.Margin = new Thickness(2);
 
-            //默认为雷达图
-            CurrentCanvas = new RadarCanvas();
+            IsShowLegend = true;
+            //默认为坐标图
+            CurrentCanvas = new ChartCanvas();
             
             this.Loaded += Chart_Loaded;
             this.SizeChanged += new SizeChangedEventHandler(Chart_SizeChanged);
@@ -52,6 +53,25 @@ namespace JMChart
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// 是否显示图例
+        /// </summary>
+        public bool IsShowLegend { get; set; }
+
+        /// <summary>
+        /// 图例位置
+        /// </summary>
+        public EnumLegendLabelPosition LegendLabelPosition
+        {
+            get {
+                return CurrentCanvas.LegendLabelPosition;
+            }
+            set
+            {
+                CurrentCanvas.LegendLabelPosition = value;
+            }
         }
 
         ///// <summary>
@@ -100,71 +120,81 @@ namespace JMChart
                 }
 
                 CurrentCanvas.DataContext = this.DataContext;
-
+            
                 this.LayoutRoot.Children.Clear();
-                this.chartCanvas.Children.Clear();               
+                this.chartCanvas.Children.Clear();
 
-                ///初始化图例容器
-                /////根据图例位置，排例图表与图例的位置
-                switch (CurrentCanvas.LegendLabelPosition)
+                if (IsShowLegend)
                 {
-                    case EnumLegendLabelPosition.Bottom:
-                        {
-                            this.LayoutRoot.Children.Add(this.chartCanvas);
-                            this.CurrentCanvas.LegendPanel.Orientation = Orientation.Horizontal;
-                            this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-                            this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                            this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
-                            chartCanvas.Margin = new Thickness(MarginSize);
+                    this.CurrentCanvas.LegendPanel.Visibility = System.Windows.Visibility.Visible;
+                    ///初始化图例容器
+                    /////根据图例位置，排例图表与图例的位置
+                    switch (CurrentCanvas.LegendLabelPosition)
+                    {
+                        case EnumLegendLabelPosition.Bottom:
+                            {
+                                this.LayoutRoot.Children.Add(this.chartCanvas);
+                                this.CurrentCanvas.LegendPanel.Orientation = Orientation.Horizontal;
+                                this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+                                this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                                this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
+                                chartCanvas.Margin = new Thickness(MarginSize);
 
-                            CurrentCanvas.Width = this.ActualWidth - MarginSize * 2;
-                            CurrentCanvas.Height = this.ActualHeight - CurrentCanvas.LegendSize.Height - MarginSize;
-                            break;
-                        }
-                    case EnumLegendLabelPosition.Right:
-                        {
-                            this.LayoutRoot.Children.Add(this.chartCanvas);
-                            this.CurrentCanvas.LegendPanel.Orientation = Orientation.Vertical;
-                            this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                            this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-                            this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
-                            chartCanvas.Margin = new Thickness(24, 24, 24, 30);
+                                CurrentCanvas.Width = this.ActualWidth - MarginSize * 2;
+                                CurrentCanvas.Height = this.ActualHeight - CurrentCanvas.LegendSize.Height - MarginSize;
+                                break;
+                            }
+                        case EnumLegendLabelPosition.Right:
+                            {
+                                this.LayoutRoot.Children.Add(this.chartCanvas);
+                                this.CurrentCanvas.LegendPanel.Orientation = Orientation.Vertical;
+                                this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                                this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+                                this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
+                                chartCanvas.Margin = new Thickness(24, 24, 24, 30);
 
-                            CurrentCanvas.Width = this.ActualWidth - CurrentCanvas.LegendSize.Width - MarginSize;
-                            CurrentCanvas.Height = this.ActualHeight - MarginSize * 2;
-                            break;
-                        }
-                    case EnumLegendLabelPosition.Top:
-                        {                            
-                            this.CurrentCanvas.LegendPanel.Orientation = Orientation.Horizontal;
-                            this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                            this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                            this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
-                            this.LayoutRoot.Children.Add(this.chartCanvas);
+                                CurrentCanvas.Width = this.ActualWidth - CurrentCanvas.LegendSize.Width - MarginSize;
+                                CurrentCanvas.Height = this.ActualHeight - MarginSize * 2;
+                                break;
+                            }
+                        case EnumLegendLabelPosition.Top:
+                            {
+                                this.CurrentCanvas.LegendPanel.Orientation = Orientation.Horizontal;
+                                this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                                this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                                this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
+                                this.LayoutRoot.Children.Add(this.chartCanvas);
 
-                            CurrentCanvas.Width = this.ActualWidth - MarginSize * 2;
-                            CurrentCanvas.Height = this.ActualHeight - CurrentCanvas.LegendSize.Height - MarginSize;
+                                CurrentCanvas.Width = this.ActualWidth - MarginSize * 2;
+                                CurrentCanvas.Height = this.ActualHeight - CurrentCanvas.LegendSize.Height - MarginSize;
 
-                            chartCanvas.Margin = new Thickness(24, CurrentCanvas.LegendSize.Height, MarginSize, MarginSize);
-                            break;
-                        }
-                    case EnumLegendLabelPosition.Left:
-                        {
-                            this.CurrentCanvas.LegendPanel.Orientation = Orientation.Vertical;
-                            this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                            this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                            this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
-                            this.LayoutRoot.Children.Add(this.chartCanvas);
+                                chartCanvas.Margin = new Thickness(24, CurrentCanvas.LegendSize.Height, MarginSize, MarginSize);
+                                break;
+                            }
+                        case EnumLegendLabelPosition.Left:
+                            {
+                                this.CurrentCanvas.LegendPanel.Orientation = Orientation.Vertical;
+                                this.CurrentCanvas.LegendPanel.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                                this.CurrentCanvas.LegendPanel.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                                this.LayoutRoot.Children.Add(this.CurrentCanvas.LegendPanel);
+                                this.LayoutRoot.Children.Add(this.chartCanvas);
 
-                            CurrentCanvas.Width = this.ActualWidth - CurrentCanvas.LegendSize.Width - MarginSize;
-                            CurrentCanvas.Height = this.ActualHeight - MarginSize - MarginSize;
+                                CurrentCanvas.Width = this.ActualWidth - CurrentCanvas.LegendSize.Width - MarginSize;
+                                CurrentCanvas.Height = this.ActualHeight - MarginSize - MarginSize;
 
-                            chartCanvas.Margin = new Thickness(CurrentCanvas.LegendSize.Width, MarginSize, MarginSize, MarginSize);
-                            break;
-                        }
+                                chartCanvas.Margin = new Thickness(CurrentCanvas.LegendSize.Width, MarginSize, MarginSize, MarginSize);
+                                break;
+                            }
 
+                    }
                 }
-
+                else
+                {
+                    CurrentCanvas.Width = this.ActualWidth - MarginSize * 2;
+                    CurrentCanvas.Height = this.ActualHeight - MarginSize;
+                    this.CurrentCanvas.LegendPanel.Visibility = System.Windows.Visibility.Collapsed;
+                    this.LayoutRoot.Children.Add(this.chartCanvas);
+                }
                 if (CurrentCanvas.Width > 0 && CurrentCanvas.Height > 0)
                 {
                     CurrentCanvas.Draw();

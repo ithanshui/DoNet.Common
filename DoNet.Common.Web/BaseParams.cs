@@ -24,7 +24,7 @@ namespace DoNet.Common.Web
             get
             {
                 var _rootUrl = string.Format("{0}://{1}{2}", HttpContext.Current.Request.Url.Scheme,
-                                        HttpContext.Current.Request.Url.Authority,
+                                        HttpContext.Current.Request.Url.Host,
                                         HttpContext.Current.Request.ApplicationPath).TrimEnd('/');
 
                 return _rootUrl;

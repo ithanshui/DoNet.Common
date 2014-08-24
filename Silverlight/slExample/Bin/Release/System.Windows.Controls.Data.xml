@@ -37,19 +37,19 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridAutomationPeer.GetChildrenCore">
-      <summary>Gets the collection of child elements of the <see cref="T:System.Windows.Controls.DataGrid" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. This method is called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetChildren" />.</summary>
-      <returns>The collection of child elements.</returns>
+      <summary>Gets automation peers for the collection of child elements of the element associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. This method is called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetChildren" />.</summary>
+      <returns>A list of automation peers for the collection of child elements of the owner control.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the data grid.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridAutomationPeer.GetNameCore">
-      <summary>Gets the name of the class of the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label from the base implementation; otherwise, from the <paramref name="owner" /> value.</returns>
+      <summary>Gets the UI Automation Name from the element associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name from the associated element.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern interface implementation for this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values.</param>
     </member>
@@ -137,21 +137,21 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridCellAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the data grid cell.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridCellAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the <see cref="T:System.Windows.Controls.DataGridCell" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name from the element that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name from the element that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridCellAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern for this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataGridCellAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values.</param>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridCellAutomationPeer.IsKeyboardFocusableCore">
-      <summary>Retrieves a value that indicates whether the data grid cell can accept keyboard focus</summary>
-      <returns>true if the element can accept keyboard focus; otherwise, false. The default implementation returns true in all cases.</returns>
+      <summary>Retrieves a value that indicates whether the associated element can accept keyboard focus</summary>
+      <returns>true if the owner element can accept keyboard focus; otherwise, false. </returns>
     </member>
     <member name="P:System.Windows.Automation.Peers.DataGridCellAutomationPeer.System#Windows#Automation#Provider#IGridItemProvider#Column">
       <summary>For a description of this member, see <see cref="P:System.Windows.Automation.Provider.IGridItemProvider.Column" />.</summary>
@@ -216,24 +216,24 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the data grid column header.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The name of the class.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.GetHelpTextCore">
-      <summary>Retrieves a resource that indicates to automation whether sorting is active and sorted by ascending or descending value.</summary>
-      <returns>A value that indicates whether sorting is active and sorted by ascending or descending value.</returns>
+      <summary>Returns a string that describes the functionality of the owner control.</summary>
+      <returns>A localized human-readable string value that indicates funtionality of the control, specifically its sorting mode if any.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the <see cref="T:System.Windows.Controls.Primitives.DataGridColumnHeader" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name of the element that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name of the object that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern for the <see cref="T:System.Windows.Controls.Primitives.DataGridColumnHeader" /> instance that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataGridAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values that indicates the control pattern.</param>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.IsContentElementCore">
-      <summary>Retrieves a value that indicates whether the data grid item contains data that is presented to the user.</summary>
+      <summary>Retrieves a value that indicates whether the item contains data that is presented to the user.</summary>
       <returns>true if the element is a content element; otherwise, false.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeaderAutomationPeer.System#Windows#Automation#Provider#IInvokeProvider#Invoke">
@@ -280,12 +280,12 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeadersPresenterAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.ChildWindowAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.Primitives.DataGridColumnHeadersPresenter" />.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.ChildWindowAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridColumnHeadersPresenterAutomationPeer.IsContentElementCore">
       <summary>Retrieves a value that indicates whether the element contains data that is presented to the user.</summary>
-      <returns>true if the element is a content element; otherwise, false. This implementation returns false in all cases.</returns>
+      <returns>true if the element is a content element; otherwise, false. </returns>
     </member>
     <member name="T:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer">
       <summary>Exposes <see cref="T:System.Windows.Controls.Primitives.DataGridDetailsPresenter" /> types to UI automation.</summary>
@@ -299,16 +299,16 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.Primitives.DataGridDetailsPresenter" />.</returns>
+      <summary>Gets the name of the class that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The name of the class.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer.IsContentElementCore">
       <summary>Retrieves a value that indicates whether the element contains data that is presented to the user.</summary>
-      <returns>true if the element is a content element; otherwise, false. By default, returns false in all cases.</returns>
+      <returns>true if the element is a content element; otherwise, false.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridDetailsPresenterAutomationPeer.IsControlElementCore">
       <summary>Retrieves a value that indicates whether the element is understood by the user as interactive or as contributing to the logical structure of the control in the GUI.</summary>
-      <returns>true if the element is a control; otherwise, false. By default, returns true in all cases.</returns>
+      <returns>true if the element is a control; otherwise, false. </returns>
     </member>
     <member name="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer">
       <summary>Exposes the groups of items in <see cref="T:System.Windows.Data.CollectionViewGroup" /> views of a <see cref="T:System.Windows.Controls.DataGrid" /> to UI automation.</summary>
@@ -341,12 +341,12 @@
       <returns>The bounding rectangle.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetChildrenCore">
-      <summary>Retrieves the collection of child elements that are represented in the UI automation tree as immediate child elements of the automation peer.</summary>
-      <returns>The collection of child elements.</returns>
+      <summary>Retrieves automation peers for the collection of child elements that are represented in the UI automation tree as immediate child elements of the automation peer.</summary>
+      <returns>A list of automation peers for the collection of child elements.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the associated owner class.</returns>
+      <summary>Gets the name of the class that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetClickablePointCore">
       <summary>Retrieves the point on the group of items that responds to a mouse click.</summary>
@@ -373,15 +373,15 @@
       <returns>The type of the control.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the data grid item that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name of the data grid item that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name of the object that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetOrientationCore">
       <summary>Retrieves a value that indicates the explicit control orientation, if any.</summary>
       <returns>The orientation of the control, as a value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern for the item groups of the <see cref="T:System.Windows.Controls.DataGrid" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataGridGroupItemAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values.</param>
     </member>
@@ -494,7 +494,7 @@
       <returns>The collection of child elements.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridItemAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <summary>Gets the class name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
       <returns>A string value that represents the type of the data grid item.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridItemAutomationPeer.GetClickablePointCore">
@@ -522,15 +522,15 @@
       <returns>The type of the control.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridItemAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the data grid item that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name from  the data grid item that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name from the object that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridItemAutomationPeer.GetOrientationCore">
       <summary>Retrieves a value that indicates the explicit control orientation, if any.</summary>
       <returns>The orientation of the control as a value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridItemAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern for the item of the <see cref="T:System.Windows.Controls.DataGrid" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataGridItemAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values.</param>
     </member>
@@ -616,8 +616,8 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.DataGridRow" /> owner.</returns>
+      <summary>Gets the class name for the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The name of the class.</returns>
     </member>
     <member name="T:System.Windows.Automation.Peers.DataGridRowGroupHeaderAutomationPeer">
       <summary>Exposes the items in <see cref="T:System.Windows.Controls.DataGridRowGroupHeader" /> item types to UI automation. </summary>
@@ -631,8 +631,8 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowGroupHeaderAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowGroupHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.DataGridRowGroupHeader" /> owner.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowGroupHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="T:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer">
       <summary>Exposes <see cref="T:System.Windows.Controls.Primitives.DataGridRowHeader" /> types to UI automation. </summary>
@@ -646,16 +646,16 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.Primitives.DataGridRowHeader" /> owner.</returns>
+      <summary>Gets the name of the class associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the <see cref="T:System.Windows.Controls.Primitives.DataGridRowHeader" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name from the element that is associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name of the element that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowHeaderAutomationPeer.IsContentElementCore">
-      <summary>Retrieves a value that indicates whether the element contains data that is presented to the user.</summary>
-      <returns>true if the element is a content element; otherwise, false. This implementation returns false in all cases.</returns>
+      <summary>Retrieves a value that indicates whether the associated element contains data that is presented to the user.</summary>
+      <returns>true if the associated element is a content element; otherwise, false. </returns>
     </member>
     <member name="T:System.Windows.Automation.Peers.DataGridRowsPresenterAutomationPeer">
       <summary>Exposes <see cref="T:System.Windows.Controls.Primitives.DataGridRowsPresenter" /> types to UI automation. </summary>
@@ -674,7 +674,7 @@
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowsPresenterAutomationPeer.GetClassNameCore">
       <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataGridRowsPresenterAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.Primitives.DataGridRowsPresenter" /> owner.</returns>
+      <returns>A string value that represents the name of the class for the <see cref="T:System.Windows.Controls.Primitives.DataGridRowsPresenter" /> owner.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataGridRowsPresenterAutomationPeer.IsContentElementCore">
       <summary>Retrieves a value that indicates whether the element contains data that is presented to the user.</summary>
@@ -694,19 +694,19 @@
       <returns>A value of the enumeration.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataPagerAutomationPeer.GetClassNameCore">
-      <summary>Gets the name of the class for the object associated with this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
-      <returns>A string value that represents the type of the <see cref="T:System.Windows.Controls.DataPager" />.</returns>
+      <summary>Gets the name of the class that is associated with this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetClassName" />.</summary>
+      <returns>The class name</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataPagerAutomationPeer.GetClickablePointCore">
       <summary>Retrieves the <see cref="T:System.Windows.Point" /> object that represents the clickable space of the paging element.</summary>
       <returns>The object that represents the clickable space of the paging element.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataPagerAutomationPeer.GetNameCore">
-      <summary>Gets the text label of the <see cref="T:System.Windows.Controls.DataPager" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
-      <returns>The text label of the element that is associated with this automation peer.</returns>
+      <summary>Gets the UI Automation Name for the  <see cref="T:System.Windows.Controls.DataPager" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />. Called by <see cref="M:System.Windows.Automation.Peers.AutomationPeer.GetName" />.</summary>
+      <returns>The UI Automation Name of the object that is associated with this automation peer.</returns>
     </member>
     <member name="M:System.Windows.Automation.Peers.DataPagerAutomationPeer.GetPattern(System.Windows.Automation.Peers.PatternInterface)">
-      <summary>Gets the control pattern for the <see cref="T:System.Windows.Controls.DataPager" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />.</summary>
+      <summary>Gets an object that supports the requested pattern, based on the patterns supported by this <see cref="T:System.Windows.Automation.Peers.DataPagerAutomationPeer" />.</summary>
       <returns>The object that implements the pattern interface, or null if the specified pattern interface is not implemented by this peer.</returns>
       <param name="patternInterface">One of the enumeration values.</param>
     </member>
@@ -1483,16 +1483,16 @@
       <returns>The row item that contains the cell being copied to the clipboard.</returns>
     </member>
     <member name="M:System.Windows.Controls.DataGridClipboardCellContent.op_Equality(System.Windows.Controls.DataGridClipboardCellContent,System.Windows.Controls.DataGridClipboardCellContent)">
-      <summary>Compares the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects for equality.</summary>
-      <returns>true if the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects are equal; otherwise, false.</returns>
-      <param name="clipboardCellContent1">A <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for equality.</param>
-      <param name="clipboardCellContent2">A <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for equality.</param>
+      <summary>Indicates whether the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects for equality.</summary>
+      <returns>true if the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects have the same <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Column" />, <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Item" />, and <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Content" /> values; otherwise, false.</returns>
+      <param name="clipboardCellContent1">The first <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for equality.</param>
+      <param name="clipboardCellContent2">The second <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for equality.</param>
     </member>
     <member name="M:System.Windows.Controls.DataGridClipboardCellContent.op_Inequality(System.Windows.Controls.DataGridClipboardCellContent,System.Windows.Controls.DataGridClipboardCellContent)">
-      <summary>Compares the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects for inequality.</summary>
-      <returns>true if the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects are not equal; otherwise, false.</returns>
-      <param name="clipboardCellContent1">A <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for inequality.</param>
-      <param name="clipboardCellContent2">A <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare for inequality.</param>
+      <summary>Indicates whether the two <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects are not equivalent.</summary>
+      <returns>true if the specified <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> objects do not have the same <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Item" />, <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Column" />, and <see cref="P:System.Windows.Controls.DataGridClipboardCellContent.Content" /> property values; otherwise, false.</returns>
+      <param name="clipboardCellContent1">The first <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare.</param>
+      <param name="clipboardCellContent2">The second  <see cref="T:System.Windows.Controls.DataGridClipboardCellContent" /> to compare.</param>
     </member>
     <member name="T:System.Windows.Controls.DataGridClipboardCopyMode">
       <summary>Specifies whether content can be copied to the clipboard from a <see cref="T:System.Windows.Controls.DataGrid" /> control. If the content can be copied, specifies whether column headers are copied.</summary>
@@ -1640,8 +1640,8 @@
       <returns>An enumeration value that specifies the column visibility. The default is <see cref="F:System.Windows.Visibility.Visible" />.</returns>
     </member>
     <member name="P:System.Windows.Controls.DataGridColumn.Width">
-      <summary>Gets or sets the column width or automatic sizing mode.</summary>
-      <returns>A structure that represents the column width or automatic sizing mode. The default is the <see cref="P:System.Windows.Controls.DataGrid.ColumnWidth" /> property value.</returns>
+      <summary>Gets or sets the column width or an automatic sizing mode.</summary>
+      <returns>A structure that represents the column width or an automatic sizing mode. The default is the <see cref="P:System.Windows.Controls.DataGrid.ColumnWidth" /> property value.</returns>
     </member>
     <member name="T:System.Windows.Controls.DataGridColumnEventArgs">
       <summary>Provides data for <see cref="T:System.Windows.Controls.DataGrid" /> column-related events.</summary>
@@ -1785,8 +1785,8 @@
       <returns>true if this instance uses the header-based automatic sizing mode; otherwise, false.</returns>
     </member>
     <member name="P:System.Windows.Controls.DataGridLength.IsStar">
-      <summary>Gets a value that indicates whether <see cref="P:System.Windows.Controls.DataGridLength.UnitType" /> property is set to <see cref="F:System.Windows.GridUnitType.Star" />.</summary>
-      <returns>true if the <see cref="P:System.Windows.Controls.DataGridLength.UnitType" /> property is set to <see cref="F:System.Windows.GridUnitType.Star" />; otherwise false.</returns>
+      <summary>Gets a value that indicates whether <see cref="P:System.Windows.Controls.DataGridLength.UnitType" /> property is set to <see cref="F:System.Windows.Controls.DataGridLengthUnitType.Star" />, which means space is distributed by weighted proportion</summary>
+      <returns>true if the <see cref="P:System.Windows.Controls.DataGridLength.UnitType" /> property is set to <see cref="F:System.Windows.Controls.DataGridLengthUnitType.Star" />; otherwise false.</returns>
     </member>
     <member name="M:System.Windows.Controls.DataGridLength.op_Equality(System.Windows.Controls.DataGridLength,System.Windows.Controls.DataGridLength)">
       <summary>Compares two <see cref="T:System.Windows.Controls.DataGridLength" /> structures for equality.</summary>

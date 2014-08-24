@@ -7,19 +7,6 @@
     d:DesignHeight="300" d:DesignWidth="400">
     
     <Grid x:Name="LayoutRoot" Background="White">
-        <Border BorderBrush="Red" BorderThickness="1" Margin="81,81,226,154">
-            
-            <TextBlock Text="fefeding" RenderTransformOrigin="0.5 0.5" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                <TextBlock.RenderTransform>
-                    <TransformGroup>
-                    <!--<RotateTransform Angle="30"
-                                     CenterX="50" CenterY="50"></RotateTransform>-->
-                    <CompositeTransform Rotation="90"  
-                                        ></CompositeTransform>
-                    </TransformGroup>
-                </TextBlock.RenderTransform>
-            </TextBlock>
-        </Border>
-      
+      <telerik:RadGridView />
     </Grid>
 </UserControl>

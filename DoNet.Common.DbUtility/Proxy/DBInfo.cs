@@ -30,5 +30,11 @@ namespace DoNet.Common.DbUtility.Proxy
         /// </summary>
         [DataMember]
         public bool IsProxy { get; set; }
+
+        /// <summary>
+        /// 代理地址
+        /// </summary>
+        [DataMember]
+        public string ProxyUrl { get; set; }
     }
 }

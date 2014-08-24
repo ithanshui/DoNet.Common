@@ -16,8 +16,9 @@ namespace DoNet.Common.DbUtility.Proxy
         /// <returns></returns>
         public static IDBHelper CreateProxy()
         {
-            var proxy = DoNet.Common.Net.WCFManager.Client.CreateRemoteObject<IDBHelper>("DBProxy");
-            return proxy;
+            //var proxy = DoNet.Common.Net.WCFManager.Client.CreateRemoteObject<IDBHelper>("DBProxy");
+            //return proxy;
+            return new DBRequester();
         }
     }
 }

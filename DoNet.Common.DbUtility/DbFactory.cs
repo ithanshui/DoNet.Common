@@ -20,7 +20,7 @@ namespace DoNet.Common.DbUtility
         {
             return new DbORM();
         }
-
+ 
         /// <summary>
         /// 通过配置名创建数据库操作类
         /// </summary>
@@ -51,7 +51,7 @@ namespace DoNet.Common.DbUtility
         {
             return new DbORM(setting.ProviderName, setting.ConnectionString);
         }
-
+/*
         /// <summary>
         /// 生成带缓存的DB基类
         /// </summary>
@@ -80,6 +80,6 @@ namespace DoNet.Common.DbUtility
         public static JmDB<T> CreateJMDB<T>(string configPath, string connConfigName)
         {
             return new JmDB<T>(configPath, connConfigName);
-        }
+        }*/
     }
 }

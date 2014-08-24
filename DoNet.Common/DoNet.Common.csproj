@@ -12,6 +12,7 @@
     <AssemblyName>DoNet.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,10 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Json, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\System.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Remoting" />
@@ -51,8 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\ConvertHelper.cs" />
+    <Compile Include="Data\ServiceProxyParam.cs" />
+    <Compile Include="Data\TableFieldAttribute.cs" />
+    <Compile Include="Data\TableAttribute.cs" />
     <Compile Include="Data\DataConvert.cs" />
+    <Compile Include="Data\DataSet.cs" />
     <Compile Include="Data\DateHelper.cs" />
+    <Compile Include="Data\PageData.cs" />
     <Compile Include="Drawing\ImageHelper.cs" />
     <Compile Include="Drawing\ScreenHelper.cs" />
     <Compile Include="Hook\HookApi.cs" />
@@ -63,18 +77,23 @@
     <Compile Include="IO\INIHelper.cs" />
     <Compile Include="IO\Logger.cs" />
     <Compile Include="IO\PathHelper.cs" />
-    <Compile Include="IO\PrintDialog.cs" />
+    <Compile Include="IO\Printer.cs" />
     <Compile Include="IO\ShareMemory.cs" />
     <Compile Include="IO\XmlHelper.cs" />
     <Compile Include="LinqExpression\Helper.cs" />
     <Compile Include="Net\BaseNet.cs" />
     <Compile Include="Net\FTPClient.cs" />
+    <Compile Include="Net\HttpListenerController.cs" />
+    <Compile Include="Net\HttpListenerWorkerRequest.cs" />
+    <Compile Include="Net\HttpListenerWrapper.cs" />
+    <Compile Include="Net\JMProxy.cs" />
     <Compile Include="Net\JMRequest.cs" />
     <Compile Include="Net\JMResponse.cs" />
     <Compile Include="Net\MailHelper.cs" />
     <Compile Include="Net\Policy.cs" />
     <Compile Include="Net\RemotingHelper.cs" />
     <Compile Include="Net\WCFManager.cs" />
+    <Compile Include="Net\WebProxyHandler.cs" />
     <Compile Include="Net\WebServiceHelper.cs" />
     <Compile Include="Process\Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,10 +104,12 @@
     <Compile Include="Reflection\TypeHelper.cs" />
     <Compile Include="Serialization\FormatterHelper.cs" />
     <Compile Include="Serialization\JSon.cs" />
+    <Compile Include="Svg\SVGHelper.cs" />
     <Compile Include="Text\PinYin.cs" />
     <Compile Include="Text\Rss.cs" />
     <Compile Include="Text\Security.cs" />
     <Compile Include="Text\StringHelper.cs" />
+    <Compile Include="Tools\CompressHelper.cs" />
     <Compile Include="Tools\CVS.cs" />
     <Compile Include="Tools\IpSearch.cs" />
     <Compile Include="Tools\JsCompress.cs" />
@@ -96,11 +117,16 @@
     <Compile Include="Tools\SVN.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="IO\cRS232.vb" />
+    <Content Include="IO\RS232API.vb" />
     <Content Include="Net\LocalObjectConfig.xml" />
     <Content Include="Net\Policy.xml" />
     <Content Include="Net\RemoteObjectConfig.xml" />
     <Content Include="Net\RemotingConfig.xml" />
     <Content Include="Reflection\LocalObjectConfig.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Net\proxy.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

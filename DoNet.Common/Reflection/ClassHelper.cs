@@ -22,20 +22,33 @@ namespace DoNet.Common.Reflection
         /// </summary>
         /// <param name="dllPath">DLL路径</param>
         /// <param name="className">类名</param>
+        /// <param name="nameSpace">空间名，默认为空</param>
         /// <returns></returns>
-        public static Type GetClassType(string dllPath, string className)
+        public static Type GetClassType(string dllPath, string className,string nameSpace = "")
         {
-            Assembly ass = Assembly.LoadFrom(dllPath);
-            if (!string.IsNullOrEmpty(className))
+            Assembly ass = null;
+            //如果驱动文件存在
+            if (System.IO.File.Exists(dllPath))
             {
-                return ass.GetType(className);
+                ass = Assembly.LoadFrom(dllPath);                
             }
-            else
+            else if(!string.IsNullOrWhiteSpace(nameSpace))
             {
-                Type[] ts = ass.GetTypes();
-                if (ts.Length > 0) return ts[0];
-                return null;
+                ass = System.Reflection.Assembly.Load(nameSpace);                
             }
+            if (ass != null)
+            {
+                if (!string.IsNullOrWhiteSpace(className))
+                {
+                    return ass.GetType(className);
+                }
+                else
+                {
+                    Type[] ts = ass.GetTypes();
+                    if (ts.Length > 0) return ts[0];
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -132,7 +145,9 @@ namespace DoNet.Common.Reflection
         /// <param name="obj"></param>
         public static void SetPropertyValue(object sender, System.Reflection.PropertyInfo pi, object obj, object[] indexs)
         {
-            if (obj == null || obj.ToString() == "") return;
+            if (pi.CanWrite == false || obj == null || obj.ToString() == "") return;
+            var setmethod = pi.GetSetMethod();
+            if (setmethod == null || setmethod.IsPublic == false) return;
 
             if (pi.PropertyType != typeof(String))
             {
@@ -142,22 +157,103 @@ namespace DoNet.Common.Reflection
                 }
                 else if (pi.PropertyType == typeof(Boolean) || pi.PropertyType.BaseType == typeof(Boolean))
                 {
-                    pi.SetValue(sender, obj.Equals("true") || obj.Equals("1"), indexs);
+                    pi.SetValue(sender, "true".Equals(obj.ToString(), StringComparison.OrdinalIgnoreCase) || "1".Equals(obj.ToString()), indexs);
                 }
                 else
                 {
-                    //if (!pi.PropertyType.FullName.Contains("System.")) //这里对自定义不做处理
-                    //{
-                    //    return;
-                    //}
+                    try
+                    {
+                        if (pi.PropertyType.IsGenericType && pi.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            var t = pi.PropertyType.GetGenericArguments()[0];
+                            obj = Convert.ChangeType(obj, t);
+                        }
+                        else
+                        {
+                            obj = Convert.ChangeType(obj, pi.PropertyType);
+                        }
 
-                    pi.SetValue(sender, Convert.ChangeType(obj, pi.PropertyType), indexs);
+                        pi.SetValue(sender, obj, indexs);
+
+                        pi.SetValue(sender,
+                            Convert.ChangeType(obj, pi.PropertyType),
+                            indexs);
+                    }
+                    catch (Exception ex)
+                    {
+                        DoNet.Common.IO.Logger.Write(ex.ToString());
+                        DoNet.Common.IO.Logger.Write("convert obj[" + obj.ToString() + "] to " + pi.PropertyType.ToString());
+                    }
                 }
             }
             else
             {
-                pi.SetValue(sender, obj == DBNull.Value ? "" : obj.ToString(),
-                            indexs);
+                if (obj.GetType() == typeof(byte[]))
+                {
+                    var v = System.Text.Encoding.UTF8.GetString((byte[])obj);
+                    pi.SetValue(sender, v, indexs);
+                }
+                else
+                {
+                    pi.SetValue(sender, obj == DBNull.Value ? "" : obj.ToString(),
+                                indexs);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取静态字段的值
+        /// </summary>
+        /// <param name="sender">对象实体</param>
+        /// <param name="ClassName">所在类</param>
+        /// <param name="fieldName">属性名</param>
+        /// <returns></returns>
+        public static object GetStaticFieldValue(Type senderTyle, string fieldName)
+        {
+            var f = senderTyle.GetField(fieldName);
+            if (f != null)
+            {
+                return f.GetValue(null);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 配置属性的值
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fi"></param>
+        /// <param name="obj"></param>
+        public static void SetFieldValue(object sender, System.Reflection.FieldInfo fi, object obj)
+        {
+            if (fi.IsPublic == false || obj == null || obj.ToString() == "") return;
+
+            if (fi.FieldType != typeof(String))
+            {
+                if (fi.FieldType == typeof(Enum) || fi.FieldType.BaseType == typeof(Enum))
+                {
+                    fi.SetValue(sender, obj);//Convert.ChangeType(obj, typeof(int))
+                }
+                else if (fi.FieldType == typeof(Boolean) || fi.FieldType.BaseType == typeof(Boolean))
+                {
+                    fi.SetValue(sender, "true".Equals(obj.ToString(), StringComparison.OrdinalIgnoreCase) || "1".Equals(obj.ToString()));
+                }
+                else
+                {
+                    fi.SetValue(sender, Convert.ChangeType(obj, fi.FieldType));
+                }
+            }
+            else
+            {
+                if (obj.GetType() == typeof(byte[]))
+                {
+                    var v = System.Text.Encoding.UTF8.GetString((byte[])obj);
+                    fi.SetValue(sender, v);
+                }
+                else
+                {
+                    fi.SetValue(sender, obj == DBNull.Value ? "" : obj.ToString());
+                }
             }
         }
 
@@ -170,10 +266,17 @@ namespace DoNet.Common.Reflection
         /// <param name="indexs">索引</param>  
         public static void FastSetPropertyValue(object sender, System.Reflection.PropertyInfo pi, object obj, object[] indexs)
         {
-            if (obj == null || obj.ToString() == "") return;
+            if (pi.CanWrite == false) return;
+            if (obj == null || obj == DBNull.Value || obj.ToString() == "")
+            {
+                if (pi.PropertyType == typeof(DateTime)) obj = DateTime.Parse("1900-01-01 00:00:00");
+                else return;
+            }
 
             //获取属性的赋值方法  
             var setMethod = pi.GetSetMethod();
+            if (setMethod == null || setMethod.IsPublic == false) return;
+
             var invoke = FastInvoke.GetMethodInvoker(setMethod);
             if (invoke == null) return;
 
@@ -202,7 +305,25 @@ namespace DoNet.Common.Reflection
                     }
                     else
                     {
-                        invoke(sender, new object[] { Convert.ChangeType(obj, pi.PropertyType), indexs });
+                        try
+                        {
+                            if (pi.PropertyType.IsGenericType && pi.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                            {
+                                var t = pi.PropertyType.GetGenericArguments()[0];
+                                obj = Convert.ChangeType(obj, t);
+                            }
+                            else
+                            {
+                                obj = Convert.ChangeType(obj, pi.PropertyType);
+                            }
+
+                            invoke(sender, new object[] { obj,indexs });
+                        }
+                        catch (Exception ex)
+                        {
+                            DoNet.Common.IO.Logger.Write(ex.ToString());
+                            DoNet.Common.IO.Logger.Write("convert obj[" + obj.ToString() + "] to " + pi.PropertyType.ToString());
+                        }
                     }
                 }
             }
@@ -220,6 +341,18 @@ namespace DoNet.Common.Reflection
         public static PropertyInfo[] GetTypePropertys(Type type)
         {
             var ps = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            
+            return ps;
+        }
+
+        /// <summary>
+        /// 获取对象的所有字段      
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <returns></returns>
+        public static FieldInfo[] GetTypeFields(Type type)
+        {
+            var ps = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 
             return ps;
         }
@@ -229,23 +362,19 @@ namespace DoNet.Common.Reflection
         /// </summary>
         /// <param name="obj">对象实例</param>
         /// <param name="methodName"></param>
-        public static void RunMethod(object obj, string methodName, params object[] paras)
+        public static object RunMethod(object obj, string methodName, params object[] paras)
         {
             Type t = obj.GetType();
-            if (t != null)
+
+            MethodInfo mi = t.GetMethod(methodName);
+
+            if (mi.IsStatic)
             {
-                MethodInfo mi = t.GetMethod(methodName);
-                if (mi != null)
-                {
-                    if (mi.IsStatic)
-                    {
-                        mi.Invoke(null, paras);
-                    }
-                    else
-                    {
-                        mi.Invoke(obj, paras);
-                    }
-                }
+                return mi.Invoke(null, paras);
+            }
+            else
+            {
+                return mi.Invoke(obj, paras);
             }
         }
 
@@ -255,25 +384,21 @@ namespace DoNet.Common.Reflection
         /// <param name="dllpath">DLL路径</param>
         /// <param name="className">所在类名</param>
         /// <param name="methodName">方法名</param>
-        public static void RunMethod(string dllpath, string className, string methodName, params object[] paras)
+        public static object RunMethod(string dllpath, string className, string methodName, params object[] paras)
         {
-            if (string.IsNullOrEmpty(dllpath) || string.IsNullOrEmpty(methodName)) return;
+            if (string.IsNullOrEmpty(dllpath) || string.IsNullOrEmpty(methodName)) return null;
             Type t = GetClassType(dllpath, className);
-            if (t != null)
+
+            MethodInfo mi = t.GetMethod(methodName);
+
+            if (mi.IsStatic)
             {
-                MethodInfo mi = t.GetMethod(methodName);
-                if (mi != null)
-                {
-                    if (mi.IsStatic)
-                    {
-                        mi.Invoke(null, paras);
-                    }
-                    else
-                    {
-                        object obj = Activator.CreateInstance(t);
-                        mi.Invoke(obj, paras);
-                    }
-                }
+                return mi.Invoke(null, paras);
+            }
+            else
+            {
+                object obj = Activator.CreateInstance(t);
+                return mi.Invoke(obj, paras);
             }
         }
 
@@ -344,7 +469,7 @@ namespace DoNet.Common.Reflection
         /// <returns></returns>
         public static Result CloneObject<Source, Result>(Source obj)
         {
-            return CloneObject<Source, Result>(obj, null);
+            return CloneObject<Result>(obj, null);
         }
 
         /// <summary>
@@ -355,10 +480,13 @@ namespace DoNet.Common.Reflection
         /// <param name="obj"></param>
         /// <param name="fun"></param>
         /// <returns></returns>
-        public static Result CloneObject<Source, Result>(Source obj, Func<PropertyInfo, PropertyInfo> fun)
+        public static Result CloneObject<Result>(object obj, Func<PropertyInfo, PropertyInfo> fun=null)
         {
-            var t = typeof(Source);
+            var t = obj.GetType();
             var propertys = GetTypePropertys(t);//获取其下的所有属性
+            var objpropertys = GetTypePropertys(typeof(Result));
+            var fields = GetTypeFields(t);
+            var objfields = GetTypeFields(typeof(Result));
 
             var newobj = Activator.CreateInstance<Result>();//生成新的实例
 
@@ -366,15 +494,68 @@ namespace DoNet.Common.Reflection
             {
                 var pvalue = GetPropertyValue(obj, p);//获取原对象的值
 
-                PropertyInfo pi = fun != null ? fun(p) : p;//通过外部映射
-
-                if (pi != null && pi.CanWrite)
+                PropertyInfo pi = fun != null ? fun(p) : null;//通过外部映射
+                if (pi == null)
+                {
+                    foreach (var rp in objpropertys)
+                    {
+                        if (rp.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            pi = rp;
+                            break;
+                        }
+                    }
+                }
+                if (pi == null)
+                {
+                    foreach (var rp in objfields)
+                    {
+                        if (rp.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            //把它赋给新对象
+                            SetFieldValue(newobj, rp, pvalue);
+                            break;
+                        }
+                    }
+                }
+                else if (pi.CanWrite)
                 {
                     //把它赋给新对象
-                    SetPropertyValue(newobj, pi, pvalue, null);
+                    FastSetPropertyValue(newobj, pi, pvalue, null);
                 }
             }
 
+            foreach (var f in fields)
+            {
+                var pvalue = f.GetValue(obj);//获取原对象的值
+
+                FieldInfo pi = null;//通过外部映射
+
+                foreach (var rp in objfields)
+                {
+                    if (rp.Name.Equals(f.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        pi = rp;
+                        break;
+                    }
+                }
+                if (pi != null)
+                {
+                    //把它赋给新对象
+                    SetFieldValue(newobj, pi, pvalue);
+                }
+                else
+                {
+                    foreach (var rp in objpropertys)
+                    {
+                        if (rp.Name.Equals(f.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            FastSetPropertyValue(newobj, rp, pvalue, null);
+                            break;
+                        }
+                    }
+                }
+            }
             return newobj;
         }
     }

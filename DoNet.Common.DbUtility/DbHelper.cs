@@ -10,8 +10,8 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
-using System.Data.SqlClient;
-using System.Data.OracleClient;
+//using System.Data.SqlClient;
+//using System.Data.OracleClient;
 using System.Configuration;
 
 namespace DoNet.Common.DbUtility
@@ -25,7 +25,8 @@ namespace DoNet.Common.DbUtility
         MySql,
         Sqlite,
         MSSqlServer,
-        Oracle
+        Oracle,
+        Npgsql
     }
 
     /// <summary>
@@ -34,52 +35,58 @@ namespace DoNet.Common.DbUtility
     public abstract class BaseDB:IDisposable
     {
         //数据连接接口
-        private IDbConnection _IConn = null;        
+        private IDbConnection connection = null;        
 
         //数据提供程序
-        private DbProviderFactory _DbFactory = null;
+        private DbProviderFactory dbFactory = null;
 
-        Proxy.DBInfo _dbinfo = new Proxy.DBInfo();
+        public delegate void DelegateExecuteSql(string sql);
+        public event DelegateExecuteSql ExecuteSqlCallback;
+
+        Proxy.DBInfo dbinfo = new Proxy.DBInfo();
         /// <summary>
         /// 当前数据库信息
         /// </summary>
         public Proxy.DBInfo DBInfo
         {
             get {
-                return _dbinfo;
+                return dbinfo;
             }
         }
 
         //锁
-        static object _synLock = new object();
+        static object synLock = new object();
+
+        //sqlite驱动因为分32位和64位版，首先加载正常dll，，如果不行再尝试加载64位
+        static string sqliteDllName = "System.Data.SQLite.dll";
 
         //数据库类型
-        private string _strDBType;
+        private string strDBType;
         /// <summary>
         /// 数据库类型标识
         /// </summary>
         public string StrDBType
         {
-            get { return _strDBType; }
-            set { _strDBType = value; }
+            get { return strDBType; }
+            set { strDBType = value; }
         }
 
         //数据库连接字符串
-        private string _strConnectionString;
+        private string connectionString;
         /// <summary>
         /// 连接字符串
         /// </summary>
-        public string StrConnectionString
+        public string ConnectionString
         {
-            get { return _strConnectionString; }
-            set { _strConnectionString = value; }
+            get { return connectionString; }
+            set { connectionString = value; }
         }
 
         /// <summary>
         /// 所有驱动的路径集合
         /// 不同的数据库驱动不同
         /// </summary>
-        static Dictionary<string, string> _providerDllPaths = new Dictionary<string, string>();
+        static Dictionary<string, string> providerDllPaths = new Dictionary<string, string>();
 
         /// <summary>
         /// 数据库驱动路径
@@ -91,9 +98,9 @@ namespace DoNet.Common.DbUtility
                 //通过数据库类型获取驱动路径
                 if (!string.IsNullOrWhiteSpace(StrDBType))
                 {
-                    if (_providerDllPaths.ContainsKey(StrDBType))
+                    if (providerDllPaths.ContainsKey(StrDBType))
                     {
-                        return _providerDllPaths[StrDBType];
+                        return providerDllPaths[StrDBType];
                     }
                 }
                 return string.Empty;
@@ -103,21 +110,21 @@ namespace DoNet.Common.DbUtility
                 //数据库类型
                 if (!string.IsNullOrWhiteSpace(StrDBType))
                 {
-                    if (_providerDllPaths.ContainsKey(StrDBType))
+                    if (providerDllPaths.ContainsKey(StrDBType))
                     {
-                        _providerDllPaths[StrDBType] = value;
+                        providerDllPaths[StrDBType] = value;
                     }
                     else
                     {
-                        lock (_synLock)
+                        lock (synLock)
                         {
-                            if (!_providerDllPaths.ContainsKey(StrDBType))
+                            if (!providerDllPaths.ContainsKey(StrDBType))
                             {
-                                _providerDllPaths.Add(StrDBType, value);
+                                providerDllPaths.Add(StrDBType, value);
                             }
                             else
                             {
-                                _providerDllPaths[StrDBType] = value;
+                                providerDllPaths[StrDBType] = value;
                             }
                         }
                     }
@@ -136,15 +143,15 @@ namespace DoNet.Common.DbUtility
         /// <param name="path">驱动路径</param>
         public static void SetDBProviderPath(string strDbType, string path)
         {
-            lock (_synLock)
+            lock (synLock)
             {
-                if (!_providerDllPaths.ContainsKey(strDbType))
+                if (!providerDllPaths.ContainsKey(strDbType))
                 {
-                    _providerDllPaths.Add(strDbType, path);
+                    providerDllPaths.Add(strDbType, path);
                 }
                 else
                 {
-                    _providerDllPaths[strDbType] = path;
+                    providerDllPaths[strDbType] = path;
                 }
             }
         }
@@ -152,7 +159,7 @@ namespace DoNet.Common.DbUtility
         /// <summary>
         /// 参数标识字符
         /// </summary>
-        static Dictionary<DbType, char> _ParamMarkChar = new Dictionary<DbType, char>();
+        static Dictionary<DbType, char> paramMarkChar = new Dictionary<DbType, char>();
 
         /// <summary>
         /// 参数标识字符
@@ -161,22 +168,63 @@ namespace DoNet.Common.DbUtility
         {
             get
             {
-                if (_ParamMarkChar == null || _ParamMarkChar.Count == 0)
+                if (paramMarkChar == null || paramMarkChar.Count == 0)
                 {
-                    lock (_synLock)
+                    lock (synLock)
                     {
-                        if (_ParamMarkChar == null || _ParamMarkChar.Count == 0)
+                        if (paramMarkChar == null || paramMarkChar.Count == 0)
                         {
-                            _ParamMarkChar.Add(DbType.MSSqlServer, '@');
-                            _ParamMarkChar.Add(DbType.Sqlite, '@');
-                            _ParamMarkChar.Add(DbType.Oracle, ':');
-                            _ParamMarkChar.Add(DbType.MySql, '?');
+                            paramMarkChar.Add(DbType.MSSqlServer, '@');
+                            paramMarkChar.Add(DbType.Sqlite, '@');
+                            paramMarkChar.Add(DbType.Oracle, ':');
+                            paramMarkChar.Add(DbType.Npgsql, ':');
+                            paramMarkChar.Add(DbType.MySql, '?');
                         }
                     }
                 }
-                return _ParamMarkChar;
+                return paramMarkChar;
             }
-            set { BaseDB._ParamMarkChar = value; }
+            set { BaseDB.paramMarkChar = value; }
+        }
+
+        /// <summary>
+        /// 当前DB关健字区分标识开始字符
+        /// </summary>
+        public char DBSPStartChar
+        {
+            get 
+            {
+                switch (this.GetDbType())
+                {
+                    case DbType.MSSqlServer: return '[';
+                    case DbType.MySql:
+                    case DbType.Sqlite:
+                        return '`';
+                    //case DbType.Oracle:
+                     //   return '"';
+                    default: return ' ';
+                }
+            }
+        }
+
+        /// <summary>
+        /// 当前DB关健字区分标识结束字符
+        /// </summary>
+        public char DBSPEndChar
+        {
+            get
+            {
+                switch (this.GetDbType())
+                {
+                    case DbType.MSSqlServer: return ']';
+                    case DbType.MySql:
+                    case DbType.Sqlite:
+                        return '`';
+                    //case DbType.Oracle:
+                    //    return '"';
+                    default: return ' ';
+                }
+            }
         }
 
         #region 构造函数
@@ -195,7 +243,7 @@ namespace DoNet.Common.DbUtility
         /// <param name="strConn">连接字符串</param>
         public BaseDB(string strDBType_)
         {
-            _strDBType = strDBType_;            
+            strDBType = strDBType_;            
         }
         /// <summary>
         /// 构造函数
@@ -213,42 +261,68 @@ namespace DoNet.Common.DbUtility
         /// </summary>
         /// <param name="strDBType">数据库类型:"System.Data.SqlClient" or "System.Data.OracleClient" or "System.Data.Odbc" or "System.Data.OleDb,MySql.Data.MySqlClient"</param>
         /// <param name="strConn">连接字符串</param>
-        public void SetConnection(string strdbtype, string strConn)
+        public void SetConnection(string strdbtype = null, string strConn = null)
         {
-            _strDBType = strdbtype.ToUpper();
-            StrConnectionString = strConn;
+            if(!string.IsNullOrWhiteSpace(strdbtype))StrDBType = strdbtype.ToUpper();
+            if(!string.IsNullOrWhiteSpace(strConn))ConnectionString = strConn;
 
-            _dbinfo.DBType = GetDbType();//数据库类别
-            _dbinfo.ConnectionString = strConn;
-            if (_IConn == null)
+            dbinfo.DBType = GetDbType();//数据库类别
+            dbinfo.ConnectionString = ConnectionString;
+            if (connection == null)
             {
-                if (_dbinfo.DBType == DbType.MySql)
+                if (dbinfo.DBType == DbType.MySql)
                 {
-                    LoadProviderFactoery("MySql.Data.dll", "MySql.Data", "MySql.Data.MySqlClient.MySqlClientFactory");                    
+                    LoadProviderFactoery("MySql.Data.dll", "MySql.Data", "MySql.Data.MySqlClient.MySqlClientFactory");   
+                    //dbFactory = MySql.Data.MySqlClient.MySqlClientFactory.Instance;
                 }
-                else if (_dbinfo.DBType == DbType.Sqlite)
+                else if (dbinfo.DBType == DbType.Sqlite)
                 {
-                    LoadProviderFactoery("System.Data.SQLite.dll", "System.Data.SQLite", "System.Data.SQLite.SQLiteFactory");
+                     LoadProviderFactoery(sqliteDllName, "System.Data.SQLite", "System.Data.SQLite.SQLiteFactory");                    
+                    
+                    //dbFactory = DbProviderFactories.GetFactory("System.Data.SQLite.SQLiteFactory");
+                    //dbFactory = System.Data.SQLite.SQLiteFactory.Instance;
                 }
-                else if (_dbinfo.DBType == DbType.Oracle)
+                else if (dbinfo.DBType == DbType.Oracle)
+                {                    
+                    //dbFactory = System.Data.OracleClient.OracleClientFactory.Instance;
+                    //LoadProviderFactoery("System.Data.OracleClient.dll", "System.Data.OracleClient", "System.Data.OracleClient.OracleClientFactory");  
+                    var oracle = Reflection.ClassHelper.GetClassType("System.Data.OracleClient.dll", "System.Data.OracleClient.OracleClientFactory", "System.Data.OracleClient");
+                    dbFactory = (DbProviderFactory)Reflection.ClassHelper.GetStaticFieldValue(oracle, "Instance");
+                }
+                else if (dbinfo.DBType == DbType.Npgsql)
                 {
-                    _DbFactory = System.Data.OracleClient.OracleClientFactory.Instance;
-                    //LoadProviderFactoery("System.Data.OracleClient.dll", "System.Data.OracleClient", "System.Data.OracleClient.OracleClientFactory");                    
+                    //dbFactory = Npgsql.NpgsqlFactory.Instance;
+                    var npgsql = Reflection.ClassHelper.GetClassType("Npgsql.dll", "Npgsql.NpgsqlFactory", "Npgsql");
+                    dbFactory = (DbProviderFactory)Reflection.ClassHelper.GetStaticFieldValue(npgsql, "Instance");
+                }
+                else if (dbinfo.DBType == DbType.MSSqlServer)
+                {
+                    dbFactory = DbProviderFactories.GetFactory("System.Data.SqlClient");
                 }
                 else if (!string.IsNullOrEmpty(strdbtype))
                 {
                     //获取指定提供程序名称的 DbProviderFactory 的一个实例
-                    _DbFactory = DbProviderFactories.GetFactory(strdbtype);
+                    dbFactory = DbProviderFactories.GetFactory(StrDBType);
                 }
-                if (!string.IsNullOrEmpty(strdbtype) && _DbFactory != null)
-                {
-                    //创建连接
-                    _IConn = _DbFactory.CreateConnection();
-                  
-                    //连接字符串
-                    if (!string.IsNullOrEmpty(strConn)) _IConn.ConnectionString = strConn;
-                }
+                
             }
+        }
+
+        /// <summary>
+        /// 生成数据库连接
+        /// </summary>
+        /// <returns></returns>
+        public IDbConnection CreateConnection()
+        {
+            if (!string.IsNullOrEmpty(StrDBType) && dbFactory != null)
+            {
+                //创建连接
+                connection = dbFactory.CreateConnection();
+
+                //连接字符串
+                if (!string.IsNullOrEmpty(ConnectionString)) connection.ConnectionString = ConnectionString;
+            }
+            return connection;
         }
 
         /// <summary>
@@ -264,7 +338,7 @@ namespace DoNet.Common.DbUtility
         public void SetConnection(string strdbtype, string server, int port, string username, string pwd, string dbname,string otherAttr="")
         {
             var connstring = "";
-             _strDBType = strdbtype.ToUpper();
+            strDBType = strdbtype.ToUpper();
             var dbType = GetDbType();//数据库类别
             switch (dbType)
             {
@@ -279,18 +353,25 @@ namespace DoNet.Common.DbUtility
                         connstring = string.Format("Data Source={0};" + otherAttr, dbname);
                         break;
                     }
+                case DbType.Npgsql:
+                    {
+                        connstring = string.Format("server={0};database={1};user id={2};password={3};", server,
+                            dbname, username, pwd) + (port > 0 ? "port=" + port + ";" : "") + otherAttr;
+                        break;
+                    }
                 case DbType.MySql:
                     {
                         connstring = string.Format("server={0};database={1};user id={2};password={3};", server,
                             dbname, username, pwd) + (port>0?"port=" + port + ";":"") + otherAttr;
                         break;
                     }
+                
                 case DbType.Oracle:
                     {
                         connstring = string.Format("Data Source={0};user id={1};password={2};" + otherAttr, server,
                             username, pwd);
                         break;
-                    }
+                    }               
                 default: {
                     throw new Exception("不支持的数据库类型!");
                 }
@@ -307,29 +388,12 @@ namespace DoNet.Common.DbUtility
         void LoadProviderFactoery(string dll,string nameSpace, string className)
         {
             DbProviderDllPath = string.IsNullOrEmpty(DbProviderDllPath) ? IO.PathMg.CheckPath(dll) : DbProviderDllPath;
-            //如果驱动文件存在
-            if (System.IO.File.Exists(DbProviderDllPath))
+            var t = Reflection.ClassHelper.GetClassType(DbProviderDllPath,className,nameSpace);
+            if (t == null)
             {
-                _DbFactory = (DbProviderFactory)Reflection.ClassHelper.GetClassObject(DbProviderDllPath, className);
+                throw new Exception("无法加载类型：" + className);
             }
-            //如果不存在则从当前加载
-            else
-            {
-                var ass = System.Reflection.Assembly.Load(nameSpace);
-                if (ass != null)
-                {
-                    var t = ass.GetType(className);//加载类型
-                    if (t == null)
-                    {
-                        throw new Exception("无法加载类型：" + className);
-                    }
-                    _DbFactory = (DbProviderFactory)Activator.CreateInstance(t);
-                }
-                else
-                {
-                    throw new Exception("找不到命名空间：" + nameSpace);                
-                }
-            }
+            dbFactory = (DbProviderFactory)Activator.CreateInstance(t);           
         }
         #endregion
 
@@ -341,7 +405,7 @@ namespace DoNet.Common.DbUtility
         {
             get
             {
-                return _IConn;
+                return connection;
             }
         }
         #endregion
@@ -352,7 +416,7 @@ namespace DoNet.Common.DbUtility
         /// <returns></returns>
         public DbType GetDbType()
         {
-            switch (_strDBType)
+            switch (strDBType)
             {
 
                 case "MYSQL.DATA.MYSQLCLIENT":
@@ -362,23 +426,29 @@ namespace DoNet.Common.DbUtility
                 case "SYSTEM.DATA.SQLCLIENT":
                     return DbType.MSSqlServer ;
                 case "SYSTEM.DATA.ORACLECLIENT":
-                    return DbType.Oracle;               
-            }
-            if (_strDBType.Contains("MYSQL"))
+                    return DbType.Oracle;
+                case "NPGSQL.DATA.NPGSQLCLIENT":
+                    return DbType.Npgsql;         
+                    }
+            if (strDBType.Contains("MYSQL"))
             {
                 return DbType.MySql;
             }
-            else if (_strDBType.Contains("SQLITE"))
+            else if (strDBType.Contains("SQLITE"))
             {
                 return DbType.Sqlite;
             }
-            else if (_strDBType.Contains("SQLSERVER"))
+            else if (strDBType.Contains("SQLSERVER"))
             {
                 return DbType.MSSqlServer;
             }
-            else if (_strDBType.Contains("ORACLE"))
+            else if (strDBType.Contains("ORACLE"))
             {
                 return DbType.Oracle;
+            }
+            else if (strDBType.Contains("NPGSQL"))
+            {
+                return DbType.Npgsql;
             }
             return DbType.Unknown;
         }
@@ -390,7 +460,7 @@ namespace DoNet.Common.DbUtility
         /// <returns></returns>
         public IDbTransaction GetTransaction()
         {
-            return _IConn.BeginTransaction();
+            return connection.BeginTransaction();
         }
         #endregion
 
@@ -401,18 +471,19 @@ namespace DoNet.Common.DbUtility
         /// </summary>
         public IDbConnection Open()
         {
-            if (_IConn.State == ConnectionState.Closed)
+            var con = CreateConnection();
+            if (con.State == ConnectionState.Closed)
             {
                 //关闭状态，打开连接
-                _IConn.Open();
+                con.Open();
             }
-            else if (_IConn.State == ConnectionState.Broken)
+            else if (con.State == ConnectionState.Broken)
             {
                 //中断状态，先关闭后打开连接
-                _IConn.Close();
-                _IConn.Open();
+                con.Close();
+                con.Open();
             }
-            return _IConn;
+            return con;
         }
 
         #endregion
@@ -423,13 +494,20 @@ namespace DoNet.Common.DbUtility
         /// </summary>
         public void Close()
         {
-            if (_IConn == null)
+            try
             {
-                return;
+                if (connection == null)
+                {
+                    return;
+                }
+                else if (connection.State != ConnectionState.Closed)
+                {
+                    connection.Close();
+                }
             }
-            else if (_IConn.State != ConnectionState.Closed)
+            catch (Exception ex)
             {
-                _IConn.Close();
+                Console.WriteLine(ex.Message);
             }
         }
         #endregion
@@ -445,12 +523,12 @@ namespace DoNet.Common.DbUtility
         protected IDbCommand GetCommand(string cmdText, IDbDataParameter[] pars, CommandType cmdType = CommandType.Text)
         {
             //创建数据库命令
-            IDbCommand cmd = _DbFactory.CreateCommand();
+            IDbCommand cmd = dbFactory.CreateCommand();
             cmd.CommandType = cmdType;
             //设置数据源运行的文本命令
             cmd.CommandText = cmdText;
             //设置连接
-            cmd.Connection = _IConn;
+            cmd.Connection = connection;
            
             if (pars != null)
             {
@@ -472,21 +550,25 @@ namespace DoNet.Common.DbUtility
         protected IDbCommand GetCommand(string cmdText,IDictionary<string,object> pars, CommandType cmdType= CommandType.Text)
         {
             //创建数据库命令
-            IDbCommand cmd = _DbFactory.CreateCommand();
+            IDbCommand cmd = dbFactory.CreateCommand();
             cmd.CommandType = cmdType;
             //设置数据源运行的文本命令
             cmd.CommandText = cmdText;            
             //设置连接
-            cmd.Connection = _IConn;
+            cmd.Connection = connection;
           
             if (pars != null)
             {
                 cmd.Parameters.Clear();
                 foreach (var p in pars)
                 {
-                    cmd.Parameters.Add(CreateParam(cmd,p.Key,p.Value));
+                    var v = p.Value;
+                    if (v == null) v = DBNull.Value;
+                    cmd.Parameters.Add(CreateParam(cmd,p.Key,v));
                 }
             }
+
+            if (ExecuteSqlCallback != null) ExecuteSqlCallback.BeginInvoke(cmdText, null, pars);
 
             return cmd;
         }
@@ -520,13 +602,15 @@ namespace DoNet.Common.DbUtility
         protected IDbCommand GetCommand(string cmdText, CommandType cmdType = CommandType.Text)
         {
             //创建数据库命令
-            IDbCommand cmd = _DbFactory.CreateCommand();
+            IDbCommand cmd = dbFactory.CreateCommand();
            
             cmd.CommandType = cmdType;
             //设置数据源运行的文本命令
             cmd.CommandText = cmdText;
             //设置连接
-            cmd.Connection = _IConn;
+            cmd.Connection = connection;
+
+            if (ExecuteSqlCallback != null) ExecuteSqlCallback.BeginInvoke(cmdText, null, cmdType);
 
             return cmd;
         }
@@ -562,7 +646,7 @@ namespace DoNet.Common.DbUtility
         /// <returns>返回数据读取器接口</returns>
         protected IDataReader GetDataReader(IDbCommand cmd)
         {
-            Open();
+            cmd.Connection = Open();
             return cmd.ExecuteReader();
         }
 
@@ -575,6 +659,24 @@ namespace DoNet.Common.DbUtility
         {
             var cmd = GetCommand(sql);
             return GetDataReader(cmd);
+        }
+
+        /// <summary>
+        /// 获取当前语句查得的数据条数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public int GetDataCount(string sql)
+        {
+            int count = 0;
+            using (var reader = this.GetDataReader(sql))
+            {                
+                while (reader.Read())
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
         #endregion
@@ -590,8 +692,9 @@ namespace DoNet.Common.DbUtility
         {
             int iRows = 0;
             //打开并执行命令
-            using (Open())
+            using (var con = Open())
             {
+                cmd.Connection = con;
                 iRows = cmd.ExecuteNonQuery();
             }
             return iRows;
@@ -678,14 +781,15 @@ namespace DoNet.Common.DbUtility
         {
             DataSet ds = new DataSet();
 
-            DoNet.Common.IO.Logger.Write("DBLog", "Start-Query:" + cmd.CommandText);
-            using (Open())
+            //DoNet.Common.IO.Logger.Write("DBLog", "Start-Query:" + cmd.CommandText);
+            using (var con = Open())
             {
-                IDbDataAdapter da = _DbFactory.CreateDataAdapter();
+                IDbDataAdapter da = dbFactory.CreateDataAdapter();
+                cmd.Connection = con;
                 da.SelectCommand = cmd;               
                 da.Fill(ds);
             }
-            DoNet.Common.IO.Logger.Write("DBLog", "End-Query:" + cmd.CommandText);
+            //DoNet.Common.IO.Logger.Write("DBLog", "End-Query:" + cmd.CommandText);
             return ds;
         }
 
@@ -698,7 +802,8 @@ namespace DoNet.Common.DbUtility
         {
             if (DBInfo.IsProxy)
             {
-                var ds = Proxy.Access.CreateProxy().GetDataSet(DBInfo, cmdText);
+                var dsstring = Proxy.Access.CreateProxy().GetDataSet(DBInfo, cmdText);
+                var ds = Data.DataSet.FromString(dsstring);
                 var nds = ds.ToDataSet();
                 return nds;
             }
@@ -718,13 +823,39 @@ namespace DoNet.Common.DbUtility
         {
             if (DBInfo.IsProxy)
             {
-                var ds = Proxy.Access.CreateProxy().GetDataSetWithParam(DBInfo, cmdText,paraNames,paraValues);
+                var dsstring = Proxy.Access.CreateProxy().GetDataSetWithParam(DBInfo, cmdText, paraNames, paraValues);
+                var ds = Data.DataSet.FromString(dsstring);
                 var nds = ds.ToDataSet();
                 return nds;
             }
             else
             {
                 var cmd = GetCommand(cmdText,paraNames,paraValues);
+                return GetDataSet(cmd);
+            }
+        }
+
+        /// <summary>
+        /// 执行SQL语句返回数据集
+        /// </summary>
+        /// <param name="cmdText">查询语句</param>
+        /// <returns>返回数据集</returns>
+        public DataSet GetDataSet(string cmdText, IDictionary<string,object> pars)
+        {
+            if (DBInfo.IsProxy)
+            {
+                var keys = new string[pars.Count];
+                var values = new object[pars.Count];
+                pars.Keys.CopyTo(keys, 0);
+                pars.Values.CopyTo(values, 0);
+                var dsstring = Proxy.Access.CreateProxy().GetDataSetWithParam(DBInfo, cmdText, keys, values);
+                var ds = Data.DataSet.FromString(dsstring);
+                var nds = ds.ToDataSet();
+                return nds;
+            }
+            else
+            {
+                var cmd = GetCommand(cmdText, pars);
                 return GetDataSet(cmd);
             }
         }
@@ -765,8 +896,9 @@ namespace DoNet.Common.DbUtility
         /// <returns>返回结果集中第一行的第一列数据</returns>
         protected object ExecuteScalar(IDbCommand cmd)
         {
-            using (Open())
+            using (var con = Open())
             {
+                cmd.Connection = con;
                 return cmd.ExecuteScalar();
             }
         }
@@ -808,6 +940,30 @@ namespace DoNet.Common.DbUtility
             }
         }
 
+        /// <summary>
+        /// 执行SQL语句返回单值对象
+        /// </summary>
+        /// <param name="cmdText">查询语句</param>
+        /// <returns>返回结果集中第一行的第一列数据</returns>
+        public object ExecuteScalar(string cmdText, IDictionary<string,object> pars)
+        {
+            if (DBInfo.IsProxy)
+            {
+                var keys=new string[pars.Count];
+                var values=new object[pars.Count];
+                pars.Keys.CopyTo(keys,0);
+                pars.Values.CopyTo(values,0);
+
+                return Proxy.Access.CreateProxy().ExecuteScalarWithParam(DBInfo, cmdText, keys, values);
+            }
+            else
+            {
+                var cmd = GetCommand(cmdText, pars);
+
+                return ExecuteScalar(cmd);
+            }
+        }
+
         #endregion
 
         #region 执行多条SQL语句 
@@ -821,12 +977,13 @@ namespace DoNet.Common.DbUtility
         {
             var count = 0;
 
-            using (Open())
+            using (var con = Open())
             {
-                var tran = GetTransaction();
+                using(var tran = GetTransaction())
                 {
                     foreach (var cmd in cmds)
                     {
+                        cmd.Connection = con;
                         cmd.Transaction = tran;
                         count += cmd.ExecuteNonQuery();
                     }
@@ -892,13 +1049,34 @@ namespace DoNet.Common.DbUtility
         /// <returns></returns>
         public int ExecuteSql(List<string> sqls, List<Dictionary<string,object>> pars)
         {
-            var cmds = new List<IDbCommand>();
-            for (var i = 0; i < sqls.Count;i++ )
+            if (DBInfo.IsProxy)
             {
-                var cmd = GetCommand(sqls[i], pars[i]);
-                cmds.Add(cmd);
+                var parnames=new List<string[]>();
+                var parvalues=new List<object[]>();
+                if (pars != null)
+                {
+                    foreach (var p in pars)
+                    {
+                        var ns = new string[p.Keys.Count];
+                        p.Keys.CopyTo(ns, 0);
+                        parnames.Add(ns);
+                        var vs = new object[p.Values.Count];
+                        p.Values.CopyTo(vs, 0);
+                        parvalues.Add(vs);
+                    }
+                }
+                return Proxy.Access.CreateProxy().ExecuteSqlWithParam(DBInfo, sqls, parnames, parvalues);
             }
-            return ExecuteCommands(cmds);
+            else
+            {
+                var cmds = new List<IDbCommand>();
+                for (var i = 0; i < sqls.Count; i++)
+                {
+                    var cmd = GetCommand(sqls[i], pars[i]);
+                    cmds.Add(cmd);
+                }
+                return ExecuteCommands(cmds);
+            }
         }
 
         #endregion
@@ -969,6 +1147,102 @@ namespace DoNet.Common.DbUtility
             return source.Replace("'", "").Replace("=", "").Replace("delete from", "").Replace(" or ", "").Replace("%", "");
         }
 
+        /// <summary>
+        /// 生成分页查询SQL语句
+        /// </summary>
+        /// <param name="dbType"></param>
+        /// <param name="tableName"></param>
+        /// <param name="strFields"></param>
+        /// <param name="strWhere"></param>
+        /// <param name="order"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public string CreatePagerSql(DbType dbType, string tableName,
+            string strFields,
+            string strWhere,
+            string order, int index, int count)
+        {
+            var sql = "";
+            //组合查询语句
+            switch (dbType)
+            {
+                case DbType.Sqlite:
+                case DbType.MySql:
+                    {
+                        sql = string.Format("select {0} from {1} {2} {3} limit {4},{5}",
+                                                     strFields, tableName,
+                                                     string.IsNullOrWhiteSpace(strWhere) ? "" : "where " + strWhere,
+                                                    string.IsNullOrWhiteSpace(order) ? "" : "order by " + order
+                                                    , index, count);
+                        break;
+                    }
+                case DbType.MSSqlServer:
+                    {
+                        sql =
+                            string.Format(
+                                "select t__1.* from (select {0}, ROW_NUMBER() OVER(ORDER BY (SELECT 0)) AS _RowNum from {2} {5} {1}) t__1 where t__1._RowNum between {3} and {4}",
+                                string.IsNullOrWhiteSpace(order) ? strFields : (" top(100000000) " + strFields),//如果有orderby 则子查询必须带top关健词
+                                string.IsNullOrWhiteSpace(order) ? "" : order,
+                                tableName, index + 1, index + count,
+                                string.IsNullOrWhiteSpace(strWhere) ? "" : "where " + strWhere);//因为sqlserver的行号是从一开始的
+                        break;
+                    }
+                case DbType.Npgsql:
+                    {
+                        sql = string.Format("select {0} from {1} {2} {3} limit {4} offset {5}",
+                                                     strFields, tableName,
+                                                     string.IsNullOrWhiteSpace(strWhere) ? "" : "where " + strWhere,
+                                                    string.IsNullOrWhiteSpace(order) ? "" : "order by " + order
+                                                    , count, index);
+                        break;
+                    }
+                case DbType.Oracle:
+                    {
+                        sql =
+                            string.Format(
+                                "select t__1.* from (select {0}, ROWNUM row___number from {1} {4} {5}) t__1 where t__1.row___number between {2} and {3}",
+                                strFields, tableName, index + 1, index + count,
+                                string.IsNullOrWhiteSpace(strWhere) ? "" : "where " + strWhere,
+                                string.IsNullOrWhiteSpace(order) ? "" : "order by " + order);//因为行号是从一开始的
+                        break;
+                    }
+            }
+            return sql;
+        }
+
+        /// <summary>
+        /// 处理sqlserver子查询中有orderby的情况，如果有必须加上top关分健词才能正常执行
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public string DerSubOrderSql(string sql)
+        {
+            //只有sqlserver才如此处理
+            if (this.DBInfo.DBType == DbType.MSSqlServer)
+            {
+                //只有在存在order by的情况下才处理这个逻辑
+                var orderreg = new System.Text.RegularExpressions.Regex("\\W*order\\s+by\\s+", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                if (orderreg.IsMatch(sql))
+                {
+                    var selectreg = new System.Text.RegularExpressions.Regex("(?<sel>(^|[\\W]?)select\\s+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    var seltopreg = new System.Text.RegularExpressions.Regex("^[\\s\\(]+top[\\s\\(]+", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    var ms = selectreg.Matches(sql);
+
+                    for (var i = ms.Count - 1; i >= 0; i--)
+                    {
+                        var m = ms[i];
+                        var sel = m.Groups["sel"].ToString();
+                        var selend = m.Index + sel.Length;
+                        //如果后面跟随了top则直接略过
+                        var tmp = sql.Substring(selend - 1);
+                        if (seltopreg.IsMatch(tmp)) continue;
+                        sql = sql.Insert(selend, " top(10000000) ");
+                    }
+                }
+            }
+            return sql;
+        }
         #region IDisposable 成员
 
         public void Dispose()

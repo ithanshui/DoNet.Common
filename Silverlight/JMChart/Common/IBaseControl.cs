@@ -17,5 +17,9 @@ namespace JMChart.Common
     public interface IBaseControl
     {
         void Draw();
+
+        void Show();
+
+        void Hide();
     }
 }

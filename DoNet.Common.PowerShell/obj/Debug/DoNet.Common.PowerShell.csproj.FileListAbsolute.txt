@@ -1,10 +1,5 @@
-F:\项目\jiamao\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.pdb
-F:\项目\jiamao\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\ResolveAssemblyReference.cache
-F:\项目\jiamao\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.pdb
-D:\项目\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.dll
-D:\项目\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.pdb
-D:\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\ResolveAssemblyReference.cache
-D:\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.dll
-D:\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.PowerShell\bin\Debug\DoNet.Common.PowerShell.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.csprojResolveAssemblyReference.cache
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.PowerShell\obj\Debug\DoNet.Common.PowerShell.pdb

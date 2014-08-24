@@ -1,0 +1,13 @@
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\winexample.exe
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\winexample.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.Properties.Resources.resources
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.csproj.GenerateResource.Cache
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.exe
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.csprojResolveAssemblyReference.cache
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\winexample.exe.config
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\DoNet.Common.dll
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\System.Json.dll
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\bin\Release\DoNet.Common.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\winexample\obj\x86\Release\winexample.Form1.resources

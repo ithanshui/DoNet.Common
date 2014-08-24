@@ -1,0 +1,33 @@
+﻿[2013-11-09 17:53:24]Start-Query:select * from tbtest
+[2013-11-09 17:53:24]End-Query:select * from tbtest
+[2013-11-09 17:55:53]Start-Query:select * from tbtest
+[2013-11-09 17:55:53]End-Query:select * from tbtest
+[2013-11-09 18:15:04]Start-Query:select * from tbtest
+[2013-12-17 15:55:02]Start-Query:select * from gameconf
+[2013-12-17 15:55:05]End-Query:select * from gameconf
+[2013-12-17 15:55:48]Start-Query:select * from gameconf
+[2013-12-17 15:55:49]End-Query:select * from gameconf
+[2013-12-19 16:31:51]Start-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:31:51]End-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:32:14]Start-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:32:14]End-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:32:24]Start-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:32:25]End-Query:select id,name from tbtest where (id<>'')  limit 0,10
+[2013-12-19 16:33:16]Start-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2013-12-19 16:33:16]End-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2013-12-19 16:33:26]Start-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2013-12-19 16:33:26]End-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2013-12-19 16:33:27]Start-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2013-12-19 16:33:27]End-Query:select id,name from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:47]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:47]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:51]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:51]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:52]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:14:52]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:24]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:25]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:25]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:25]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:25]Start-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10
+[2014-01-09 11:15:25]End-Query:select `id`,`name` from tbtest where (`id`<>'')  limit 0,10

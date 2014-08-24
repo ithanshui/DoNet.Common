@@ -46,5 +46,16 @@ namespace JMChart.Common
             this.lineGeometry.Figures.Clear();
             this.lineGeometry.Figures.Add(linePoints);
         }
+
+
+        public void Show()
+        {
+            this.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public void Hide()
+        {
+            this.Visibility = System.Windows.Visibility.Collapsed;
+        }
     }
 }

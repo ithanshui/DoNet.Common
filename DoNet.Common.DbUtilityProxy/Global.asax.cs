@@ -13,6 +13,7 @@ namespace DoNet.Common.DbUtilityProxy
         protected void Application_Start(object sender, EventArgs e)
         {
             DoNet.Common.IO.Logger.SetLogPath("log");
+            Environment.SetEnvironmentVariable("MONO_STRICT_MS_COMPLIANT", "yes");
         }
 
         protected void Session_Start(object sender, EventArgs e)

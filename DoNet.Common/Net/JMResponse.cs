@@ -47,7 +47,10 @@ namespace DoNet.Common.Net
                     {
                         _encoding = Encoding.UTF8;
                     }
-                    _encoding = Encoding.GetEncoding(str);
+                    else
+                    {
+                        _encoding = Encoding.GetEncoding(str);
+                    }
                 }
                 return _encoding;
             }
@@ -102,8 +105,14 @@ namespace DoNet.Common.Net
             {
                 data.RemoveRange(0, 3);
             }
-
-            return encoding.GetString(data.ToArray());
+            if (data != null && data.Count > 0)
+            {
+                return encoding.GetString(data.ToArray());
+            }
+            else 
+            {
+                return string.Empty;
+            }
         }
 
         public void Dispose()

@@ -25,7 +25,7 @@ namespace DoNet.Common.Reflection
             if (String.IsNullOrEmpty(enumvalue))
                 return "";
 
-            return GetFieldAttribute(t, enumvalue);
+            return GetFieldDescription(t, enumvalue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace DoNet.Common.Reflection
             var names =new List<string>();
             foreach (var n in enumvalues)
             {
-                var v = GetFieldAttribute(t, n);
+                var v = GetFieldDescription(t, n);
                 if (!string.IsNullOrWhiteSpace(n)) names.Add(v);
             }
             return names;
@@ -53,7 +53,7 @@ namespace DoNet.Common.Reflection
         /// <param name="t"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private static string GetFieldAttribute(Type t, string name)
+        private static string GetFieldDescription(Type t, string name)
         {
             var finfo = t.GetField(name);
             var cAttr = finfo.GetCustomAttributes(typeof(DescriptionAttribute), true);

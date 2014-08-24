@@ -89,11 +89,51 @@ namespace JMChart.Common
         {
             var dic = new System.Collections.Generic.Dictionary<string, double?[]>();
             foreach (var name in names)
+            {                
+                var values = new double?[2];
+                foreach (var d in data)
+                {
+                    var v = GetPropertyName(d, name);
+                    if (v != null && Silverlight.Common.Data.TypeHelper.IsNumber(v.GetType()))
+                    {
+                        var n = double.Parse(v.ToString());
+                        if (values[0] == null || values[0] > n)
+                        {
+                            values[0] = n;
+                        }
+                        if (values[1] == null || values[1] < n)
+                        {
+                            values[1] = n;
+                        }
+                    }
+                        //如果为字符型
+                        //第0个值为空表示为非数字型
+                    else
+                    {
+                        values[1] = data.Count;
+                    }
+                }
+                if(!dic.ContainsKey(name))dic.Add(name, values);
+            }
+            return dic;
+        }
+
+        /// <summary>
+        /// 获取集合指定属生的最大值与最小值
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="names"></param>
+        /// <returns></returns>
+        public static System.Collections.Generic.Dictionary<string, double?[]> GetMaxandNinValue(System.Collections.ICollection data, 
+            System.Collections.Generic.IEnumerable<Model.ItemMapping> mappings)
+        {
+            var dic = new System.Collections.Generic.Dictionary<string, double?[]>();
+            foreach (var name in mappings)
             {
                 var values = new double?[2];
                 foreach (var d in data)
                 {
-                    var v = GetNumberValue(d, name);
+                    var v = GetNumberValue(d, name.MemberName);
                     if (v != null)
                     {
                         if (values[0] == null || values[0] > v)
@@ -106,7 +146,7 @@ namespace JMChart.Common
                         }
                     }
                 }
-                if(!dic.ContainsKey(name))dic.Add(name, values);
+                if (!dic.ContainsKey(name.MemberName)) dic.Add(name.MemberName, values);
             }
             return dic;
         }
@@ -169,6 +209,7 @@ namespace JMChart.Common
         /// <returns></returns>
         internal static string DserLabelName(string source, System.Collections.Generic.Dictionary<string, string> pars, DelegateGetValue getValueAction = null)
         {
+            if (string.IsNullOrWhiteSpace(source)) return source;
             if (pars == null) pars=new System.Collections.Generic.Dictionary<string,string>();
 
             if (pars.ContainsKey("YName"))

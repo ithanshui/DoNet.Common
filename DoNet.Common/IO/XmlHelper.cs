@@ -4,6 +4,7 @@
 // Usage    : XML操作类
 //////////////////////////////////////////////////
 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -47,7 +48,7 @@ namespace DoNet.Common.IO
                 if (_xmlDoc == null)
                 {
                     _xmlDoc = new XmlDocument();
-                    if (string.IsNullOrEmpty(_xmlPath) && System.IO.File.Exists(_xmlPath))
+                    if (!string.IsNullOrEmpty(_xmlPath) && System.IO.File.Exists(_xmlPath))
                     {
                         _xmlDoc.Load(_xmlPath);//加载文档
                     }

@@ -53,8 +53,16 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Axis\CoorAxis.cs" />
+    <Compile Include="Axis\FunnelAxis.cs" />
+    <Compile Include="Common\BaseParams.cs" />
+    <Compile Include="Controls\CLMArrow.cs" />
+    <Compile Include="Model\CLMArrowClickEventArg.cs" />
+    <Compile Include="Model\ItemClickEventArg.cs" />
+    <Compile Include="Series\CLMBubbleSeries.cs" />
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
     </Compile>
@@ -63,12 +71,16 @@
     <Compile Include="Common\PropertyBindingControl.xaml.cs">
       <DependentUpon>PropertyBindingControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CoorCanvas.cs" />
+    <Compile Include="Model\DataPoint.cs" />
+    <Compile Include="Model\ItemMapping.cs" />
+    <Compile Include="Series\FunnelSeries.cs" />
     <Compile Include="Series\ISeries.cs" />
     <Compile Include="Common\BaseLine.cs" />
     <Compile Include="Common\IBaseControl.cs" />
-    <Compile Include="IAxis.cs" />
+    <Compile Include="Axis\IAxis.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RadarAxis.cs" />
+    <Compile Include="Axis\RadarAxis.cs" />
     <Compile Include="RadarCanvas.cs" />
     <Compile Include="Series\RadarSeries.cs" />
   </ItemGroup>
@@ -83,7 +95,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
+    <ProjectReference Include="..\Silverlight.Common\Silverlight.Common.csproj">
+      <Project>{D85744FE-32C3-4577-8BCC-CD3ACC81FBC9}</Project>
+      <Name>Silverlight.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

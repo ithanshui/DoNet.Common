@@ -17,6 +17,8 @@ namespace DoNet.Common.DbUtility.Proxy
         /// <returns></returns>
         private DbUtility.DbORM CreateDB(DBInfo db)
         {
+            DoNet.Common.IO.Logger.Debug(db);
+
             var dbHelper = DbFactory.CreateDbORM(db.DBType.ToString(), db.ConnectionString);
             return dbHelper;
         }
@@ -36,21 +38,22 @@ namespace DoNet.Common.DbUtility.Proxy
             return CreateDB(dbinfo).ExecuteNonQuery(cmdText, dbparams);
         }
 
-        public Data.DataSet GetDataSet(DBInfo dbinfo, string cmdText)
+        public string GetDataSet(DBInfo dbinfo, string cmdText)
         {
+
             var ds = CreateDB(dbinfo).GetDataSet(cmdText);
             var newds = new Data.DataSet(ds);
-            DoNet.Common.IO.Logger.Debug(newds);
-            return newds;
+            
+            return newds.ToString();
         }
 
 
-        public Data.DataSet GetDataSetWithParam(DBInfo dbinfo, string cmdText, string[] paraNames, object[] paraValues)
+        public string GetDataSetWithParam(DBInfo dbinfo, string cmdText, string[] paraNames, object[] paraValues)
         {
             var ds = CreateDB(dbinfo).GetDataSet(cmdText,paraNames,paraValues);
             var newds = new Data.DataSet(ds);
-            DoNet.Common.IO.Logger.Debug(newds);
-            return newds;
+            
+            return newds.ToString();
         }
 
         public object ExecuteScalar(DBInfo dbinfo, string cmdText)

@@ -21,11 +21,11 @@ namespace DoNet.Common.IO
         /// 设置日志目录
         /// </summary>
         /// <param name="path"></param>
-        public static void SetLogPath(string path)
+        public static string SetLogPath(string path)
         {
             //因为是异步必须先确定路径,否则如果是WEB的话无法得到工作路径(context为空)
             path = string.IsNullOrWhiteSpace(path) ? "log" : path;
-            Log.LogDirectory = Common.IO.PathMg.CheckPath(path);
+            return Log.LogDirectory = Common.IO.PathMg.CheckPath(path);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace DoNet.Common.IO
                     LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + msg
                 };
 
-                LogControl.Instance.PushLog(log);//加入到队列中
+                LogControl.Instance.AsyncPushLog(log);//加入到队列中
             }
             catch { }
         }
@@ -61,9 +61,31 @@ namespace DoNet.Common.IO
                     LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + msg
                 };
 
-                LogControl.Instance.PushLog(log);//加入到队列中
+                LogControl.Instance.AsyncPushLog(log);//加入到队列中
             }
             catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 写日志
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void FlushWrite(string msg)
+        {
+            try
+            {
+                var log = new NormalLog()
+                {
+                    Date = DateTime.Now,
+                    LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + msg
+                };
+
+                LogControl.Instance.PushLog(log);//直接写入文件
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
             }
         }
@@ -83,7 +105,7 @@ namespace DoNet.Common.IO
                     LogInfo = "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "]" + msg
                 };
 
-                LogControl.Instance.PushLog(log);//加入到队列中
+                LogControl.Instance.AsyncPushLog(log);//加入到队列中
             }
             catch (Exception ex)
             {
@@ -113,7 +135,7 @@ namespace DoNet.Common.IO
                     log.LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + Serialization.FormatterHelper.XMLSerObjectToString(msg);
                 }
 
-                LogControl.Instance.PushLog(log);//加入到队列中
+                LogControl.Instance.AsyncPushLog(log);//加入到队列中
             }
             catch (Exception ex)
             {
@@ -135,7 +157,7 @@ namespace DoNet.Common.IO
                 LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + l1
             };
 
-            LogControl.Instance.PushLog(log);//加入到队列中
+            LogControl.Instance.AsyncPushLog(log);//加入到队列中
         }
 
         /// <summary>
@@ -197,7 +219,7 @@ namespace DoNet.Common.IO
                         {
                             log.LogInfo = "[" + DateTime.Now.ToString("HH:mm:ss") + "]" + Serialization.FormatterHelper.XMLSerObjectToString(item);
                         }
-                        LogControl.Instance.PushLog(log);//加入到队列中
+                        LogControl.Instance.AsyncPushLog(log);//加入到队列中
                     }
                 }
             }
@@ -260,15 +282,22 @@ namespace DoNet.Common.IO
         /// 把日志对象加入到队列
         /// </summary>
         /// <param name="log"></param>
-        public void PushLog(Log log)
+        public void AsyncPushLog(Log log)
         {
             lock (LogCache)
             {
                 LogCache.Add(log);//加入到队列中               
             }
-            FlushLog.BeginInvoke(null, null);//异步调用处理函数
-            //var logpath = log.GetLogPath();
-            //File.AppendAllText(logpath, log.LogInfo, Log.LogEncoding);           
+            FlushLog.BeginInvoke(null, null);//异步调用处理函数                 
+        }
+
+        /// <summary>
+        /// 直接写日志
+        /// </summary>
+        /// <param name="log"></param>
+        public void PushLog(Log log)
+        {
+            log.Write();//异步调用处理函数           
         }
 
         /// <summary>
@@ -449,6 +478,13 @@ namespace DoNet.Common.IO
         /// 写日志时间
         /// </summary>
         public DateTime Date { get; set; }
+
+        public virtual string Write()
+        {
+            var path = System.IO.Path.Combine(LogDirectory, LogFileName);
+            System.IO.File.AppendAllText(path, LogInfo, System.Text.Encoding.UTF8);
+            return path;
+        }
 
         /// <summary>
         /// 写日志

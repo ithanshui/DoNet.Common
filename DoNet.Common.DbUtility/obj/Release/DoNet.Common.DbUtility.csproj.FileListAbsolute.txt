@@ -1,10 +1,6 @@
-F:\项目\jiamao\DoNet.Common\Lib\DoNet.Common.DbUtility.dll
-F:\项目\jiamao\DoNet.Common\Lib\DoNet.Common.DbUtility.pdb
-F:\项目\jiamao\DoNet.Common\DoNet.Common.DbUtility\obj\Release\ResolveAssemblyReference.cache
-F:\项目\jiamao\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.pdb
-D:\项目\DoNet.Common\Lib\DoNet.Common.DbUtility.dll
-D:\项目\DoNet.Common\Lib\DoNet.Common.DbUtility.pdb
-D:\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\ResolveAssemblyReference.cache
-D:\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.dll
-D:\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\Lib\DoNet.Common.DbUtility.dll.config
+D:\微云网盘\273389528\项目\DoNet.Common\Lib\DoNet.Common.DbUtility.dll
+D:\微云网盘\273389528\项目\DoNet.Common\Lib\DoNet.Common.DbUtility.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.csprojResolveAssemblyReference.cache
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.DbUtility\obj\Release\DoNet.Common.DbUtility.pdb

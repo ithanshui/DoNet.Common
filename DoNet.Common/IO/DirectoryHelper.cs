@@ -53,7 +53,7 @@ namespace DoNet.Common.IO
             foreach (string d in dirs)
             {
                 if (withoutdirs != null && StrInArray(withoutdirs, d, true)) continue;
-                DeleteDirectory(d);
+                ClearDirectory(d);
             }
             //删除所有文件
             string[] files = System.IO.Directory.GetFiles(dir, "*.*", System.IO.SearchOption.TopDirectoryOnly);

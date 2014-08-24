@@ -44,7 +44,7 @@ namespace DoNet.Common.DbUtility.Proxy
         /// <param name="cmdText">查询语句</param>
         /// <returns>返回数据集</returns>
         [OperationContract]
-        Data.DataSet GetDataSet(DBInfo dbinfo, string cmdText);
+        string GetDataSet(DBInfo dbinfo, string cmdText);
 
         /// <summary>
         /// 执行SQL语句返回数据集
@@ -52,7 +52,7 @@ namespace DoNet.Common.DbUtility.Proxy
         /// <param name="cmdText">查询语句</param>
         /// <returns>返回数据集</returns>
         [OperationContract]
-        Data.DataSet GetDataSetWithParam(DBInfo dbinfo,string cmdText, string[] paraNames, object[] paraValues);
+        string GetDataSetWithParam(DBInfo dbinfo,string cmdText, string[] paraNames, object[] paraValues);
 
                 /// <summary>
         /// 执行SQL语句返回单值对象

@@ -22,9 +22,10 @@ namespace DoNet.Common.Serialization
         /// </summary>
         /// <param name="obj">待序列化的对象</param>
         /// <returns></returns>
-        public static string ModelToJson(object obj)
+        public static string ModelToJson(object obj,params Type[] knowTypes)
         {
-            System.Runtime.Serialization.Json.DataContractJsonSerializer ser = new DataContractJsonSerializer(obj.GetType());
+            if (obj == null) return "null";
+            var ser = new DataContractJsonSerializer(obj.GetType(), knowTypes);
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
             {
                 ser.WriteObject(ms, obj);
@@ -40,13 +41,53 @@ namespace DoNet.Common.Serialization
         /// <param name="js"></param>
         /// <returns></returns>
         public static T JsonToModel<T>(string js)
+        {            
+            var obj = JsonToModel(typeof(T), js);
+            return (T)obj;
+        }
+
+        /// <summary>
+        /// 把JSON反序列化对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="js"></param>
+        /// <returns></returns>
+        public static T JsonToModel<T>(byte[] data)
         {
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(js)))
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(data))
             {
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
                 T obj = (T)ser.ReadObject(ms);
                 return obj;
             }
+        }
+
+        /// <summary>
+        /// 把JSON反序列化对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="js"></param>
+        /// <returns></returns>
+        public static object JsonToModel(Type t, string js)
+        {
+            if (js == "null") return null;
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(js)))
+            {
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(t);
+                var obj = ser.ReadObject(ms);
+                return obj;
+            }
+        }
+
+        /// <summary>
+        /// JSON字符串解析
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static System.Json.JsonValue Parse(string source)
+        {
+            var obj = System.Json.JsonObject.Parse(source);
+            return obj;
         }
     }
 }

@@ -72,10 +72,14 @@ namespace DoNet.Common.Net
                 classname = GetClassName(url);
             }
 
+            if (!url.EndsWith("?WSDL", StringComparison.OrdinalIgnoreCase))
+            {
+                url = url + "?WSDL";
+            }
             ///动态调用类所执行的过程
             //1.获取服务描述语言(WSDL)
             WebClient wc = new WebClient();
-            Stream stream = wc.OpenRead(url + "?WSDL");
+            Stream stream = wc.OpenRead(url);
             ServiceDescription sd = ServiceDescription.Read(stream);//设置Web服务描述语言
             ServiceDescriptionImporter sdi = new ServiceDescriptionImporter();//生成客户端代理类
             sdi.AddServiceDescription(sd, "", "");

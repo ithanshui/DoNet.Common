@@ -337,7 +337,7 @@ namespace DoNet.Common.Data
         /// <typeparam name="T">类型</typeparam>
         /// <param name="list">泛型</param>
         /// <returns>返回表</returns>
-        public static DataTable ConvertToDataTable<T>(IList<T> list)
+        public static System.Data.DataTable ConvertToDataTable<T>(IList<T> list)
         {
             //参数为空或无记录
             if (list == null || list.Count <= 0)
@@ -345,9 +345,9 @@ namespace DoNet.Common.Data
                 return null;
             }
             //指定表名创建表
-            DataTable dt = new DataTable(typeof(T).Name);
-            DataColumn dc;
-            DataRow dr;
+            var dt = new System.Data.DataTable(typeof(T).Name);
+            System.Data.DataColumn dc;
+            System.Data.DataRow dr;
             //获取公共成员或实例成员的公有属性
             System.Reflection.PropertyInfo[] propertyInfo = typeof(T).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 
@@ -366,7 +366,7 @@ namespace DoNet.Common.Data
                     string strName = pi.Name;
                     if (dt.Columns[strName] == null)
                     {
-                        dc = new DataColumn(strName, pi.PropertyType);
+                        dc = new System.Data.DataColumn(strName, pi.PropertyType);
                         dt.Columns.Add(dc);
                     }
                     dr[strName] = pi.GetValue(t, null);
@@ -381,7 +381,7 @@ namespace DoNet.Common.Data
         /// <typeparam name="T"></typeparam>
         /// <param name="List"></param>
         /// <returns></returns>
-        public static DataTable ConvertToDataTable<T>(ICollection<T> List)
+        public static System.Data.DataTable ConvertToDataTable<T>(ICollection<T> List)
         {
             List<T> ToList = new List<T>();
             foreach (T t in List)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Dynamic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
@@ -14,71 +15,101 @@ namespace DoNet.Common.LinqExpression
     /// </summary>
     public class Helper
     {
+        //public static Expression<Func<T, bool>> CompileExpression<T>(string exp)
+        //{
+        //    var context=new expression
+        //    var p = Expression<T>.Parameter(typeof(T), typeof(T).Name);
+        //    var e = 
+        //}
+
         /// <summary>
         /// 转换表达式为sql条件
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
         /// <param name="fun">表达式</param>
         /// <returns>查询条件</returns>
-        public static string DserExpressionToWhere<T>(Expression<Func<T, bool>> fun)
+        public static string DserExpressionToWhere<T>(Expression<Func<T, bool>> fun,IDictionary<string,object> pars = null,char parchar = '?',char spstart = ' ',char spend = ' ')
         {
-            var be = (BinaryExpression)fun.Body;
-            var where = BinarExpressionProvider(be.Left, be.Right, be.NodeType);
-            return where;
+            if (fun.Body is BinaryExpression)
+            {
+                var be = (BinaryExpression)fun.Body;
+                var where = BinarExpressionProvider(be.Left, be.Right, be.NodeType, pars, parchar,spstart,spend);
+                return where;
+            }
+            else
+            {
+                return ExpressionRouter(fun.Body, pars, parchar, spstart, spend);
+            }
         }
 
         // 条件表达式解析。
-        public static string BinarExpressionProvider(Expression left, Expression right, ExpressionType type)
+        public static string BinarExpressionProvider(Expression left, Expression right, ExpressionType type, IDictionary<string, object> pars = null, char parchar = '?', char spstart = ' ', char spend = ' ')
         {
             string sb = "(";
             //先处理左边
-            string tmpStr = ExpressionRouter(left);
+            string tmpStr = ExpressionRouter(left, null);
             if (tmpStr == "null")
             {
                 Expression temp = left;
                 left = right;
                 right = temp;
             }
-            sb += ExpressionRouter(left);
+            sb += ExpressionRouter(left, pars, parchar, spstart, spend);
             sb += ExpressionTypeCast(type);
             //再处理右边
-            tmpStr = ExpressionRouter(right);
+            tmpStr = ExpressionRouter(right, pars, parchar, spstart, spend);
             if (tmpStr == "null")
             {
                 if (sb.EndsWith(" ="))
-                    sb = sb.Substring(0, sb.Length - 2) + " is null";
+                    sb = spstart + sb.Substring(0, sb.Length - 2) + spend + " is null";
                 else if (sb.EndsWith("<>"))
-                    sb = sb.Substring(0, sb.Length - 2) + " is not null";
+                    sb = spstart + sb.Substring(0, sb.Length - 2) + spend + " is not null";
             }
             else
                 sb += tmpStr;
             return sb += ")";
         }
         // 表达式路由。
-        static string ExpressionRouter(Expression exp)
+        static string ExpressionRouter(Expression exp, IDictionary<string, object> pars = null, char parchar = '?', char spstart = ' ', char spend = ' ')
         {
             string sb = string.Empty;
             if (exp is BinaryExpression)
             {
                 BinaryExpression be = ((BinaryExpression)exp);
-                return BinarExpressionProvider(be.Left, be.Right, be.NodeType);
+                return BinarExpressionProvider(be.Left, be.Right, be.NodeType, pars, parchar, spstart, spend);
             }
             else if (exp is MemberExpression)
             {
                 if (!exp.ToString().StartsWith("value("))
                 {
                     MemberExpression me = ((MemberExpression)exp);
-                    return me.Member.Name;
+                    return spstart +  me.Member.Name + spend;
                 }
                 else
                 {
                     var result = Expression.Lambda(exp).Compile().DynamicInvoke();
                     if (result == null)
                         return "null";
-                    if (result is ValueType)
-                        return result.ToString();
-                    else if (result is string || result is DateTime || result is char)
-                        return string.Format("'{0}'", (result as string).Replace("'", "''"));
+
+                    string re = "";
+                    //如果指定需要参数传递。则生成参数
+                    if (pars != null)
+                    {
+                        re = parchar + "exp_par_" + pars.Count.ToString();
+                        pars.Add(re, result);
+                    }
+                    else
+                    {
+                        if (result is ValueType)
+                        {
+                            re = result.ToString();
+                        }
+                        else if (result is string || result is DateTime || result is char)
+                        {
+                            re = string.Format("'{0}'", (result as string).Replace("'", "''"));
+                        }
+                    }
+                    return re;
                 }
             }
             else if (exp is NewArrayExpression)
@@ -87,7 +118,7 @@ namespace DoNet.Common.LinqExpression
                 StringBuilder tmpstr = new StringBuilder();
                 foreach (Expression ex in ae.Expressions)
                 {
-                    tmpstr.Append(ExpressionRouter(ex));
+                    tmpstr.Append(ExpressionRouter(ex, pars, parchar,spstart,spend));
                     tmpstr.Append(",");
                 }
                 return tmpstr.ToString(0, tmpstr.Length - 1);
@@ -96,13 +127,21 @@ namespace DoNet.Common.LinqExpression
             {
                 MethodCallExpression mce = (MethodCallExpression)exp;
                 if (mce.Method.Name == "Like")
-                    return string.Format("({0} like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("({0} like {1})", 
+                        ExpressionRouter(mce.Arguments[0], pars, parchar, spstart, spend),
+                        ExpressionRouter(mce.Arguments[1], pars, parchar, spstart, spend));
                 else if (mce.Method.Name == "NotLike")
-                    return string.Format("({0} Not like {1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("({0} Not like {1})", 
+                        ExpressionRouter(mce.Arguments[0], pars, parchar, spstart, spend),
+                        ExpressionRouter(mce.Arguments[1], pars, parchar, spstart, spend));
                 else if (mce.Method.Name == "In")
-                    return string.Format("{0} In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("{0} In ({1})", 
+                        ExpressionRouter(mce.Arguments[0], pars, parchar, spstart, spend),
+                        ExpressionRouter(mce.Arguments[1], pars, parchar, spstart, spend));
                 else if (mce.Method.Name == "NotIn")
-                    return string.Format("{0} Not In ({1})", ExpressionRouter(mce.Arguments[0]), ExpressionRouter(mce.Arguments[1]));
+                    return string.Format("{0} Not In ({1})", 
+                        ExpressionRouter(mce.Arguments[0], pars, parchar, spstart, spend),
+                        ExpressionRouter(mce.Arguments[1], pars, parchar, spstart, spend));
             }
             else if (exp is ConstantExpression)
             {
@@ -117,7 +156,7 @@ namespace DoNet.Common.LinqExpression
             else if (exp is UnaryExpression)
             {
                 UnaryExpression ue = ((UnaryExpression)exp);
-                return ExpressionRouter(ue.Operand);
+                return ExpressionRouter(ue.Operand, pars, parchar, spstart, spend);
             }
             return null;
         }

@@ -63,22 +63,22 @@ namespace DoNet.Common.Net
     /// </summary>
     public class JMHttpRequest
     {
-        HttpWebRequest _request;
+        HttpWebRequest request;
         /// <summary>
         /// 当前请求
         /// </summary>
         public HttpWebRequest Request
         {
-            get { return _request; }
+            get { return request; }
         }
 
         /// <summary>
         /// 实例化一个家猫请求
         /// </summary>
         /// <param name="request">WebRequest</param>
-        public JMHttpRequest(HttpWebRequest request)
+        public JMHttpRequest(HttpWebRequest req)
         {
-            _request = request;
+            request = req;
         }
 
         /// <summary>
@@ -100,12 +100,31 @@ namespace DoNet.Common.Net
         }
 
         /// <summary>
+        /// 写入头信息
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void WriteHeader(string name,string value)
+        {
+            Request.Headers.Add(name,value);
+        }
+
+        /// <summary>
+        /// 添加cookie
+        /// </summary>
+        /// <param name="cookie"></param>
+        public void WriteCookie(Cookie cookie)
+        {
+            request.CookieContainer.Add(cookie);
+        }
+
+        /// <summary>
         /// 获取请求的资源
         /// </summary>
         /// <returns></returns>
-        public new JMHttpResponse GetResponse()
+        public JMHttpResponse GetResponse()
         {
-            var response = _request.GetResponse() as HttpWebResponse;
+            var response = request.GetResponse() as HttpWebResponse;
             return new JMHttpResponse(response);
         }
     }

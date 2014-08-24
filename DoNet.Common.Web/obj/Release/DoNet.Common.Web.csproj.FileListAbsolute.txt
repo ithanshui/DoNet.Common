@@ -1,10 +1,5 @@
-F:\项目\jiamao\DoNet.Common\Lib\DoNet.Common.Web.dll
-F:\项目\jiamao\DoNet.Common\Lib\DoNet.Common.Web.pdb
-F:\项目\jiamao\DoNet.Common\DoNet.Common.Web\obj\Release\ResolveAssemblyReference.cache
-F:\项目\jiamao\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.pdb
-D:\项目\DoNet.Common\Lib\DoNet.Common.Web.dll
-D:\项目\DoNet.Common\Lib\DoNet.Common.Web.pdb
-D:\项目\DoNet.Common\DoNet.Common.Web\obj\Release\ResolveAssemblyReference.cache
-D:\项目\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.dll
-D:\项目\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\Lib\DoNet.Common.Web.dll
+D:\微云网盘\273389528\项目\DoNet.Common\Lib\DoNet.Common.Web.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.csprojResolveAssemblyReference.cache
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common.Web\obj\Release\DoNet.Common.Web.pdb

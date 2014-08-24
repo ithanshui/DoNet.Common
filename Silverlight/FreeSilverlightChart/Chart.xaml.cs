@@ -361,7 +361,7 @@ namespace FreeSilverlightChart
 
     private void _drawTitleElem(string xaml, string title, bool isFooter)
     {
-      double width = _chartCanvas.Width, height = _chartCanvas.Height;
+      double width = _chartCanvas.Width, height = _chartCanvas.ActualHeight;
       double gridWidth = (width - _marginLeft - _marginRight);
 
       TextBlock textElem = XamlReader.Load(xaml) as TextBlock;
@@ -863,7 +863,7 @@ namespace FreeSilverlightChart
       if (_isPerspective)
         marginLeft += _XOFFSET_PERSPECTIVE;
 
-      double width = _chartCanvas.Width, height = _chartCanvas.Height;
+      double width = _chartCanvas.Width, height = _chartCanvas.ActualHeight;
       double gridWidth = (width - marginLeft - _marginRight);
       bool isCenterAligned = this.IsGroupLabelCentered();
       
@@ -964,7 +964,7 @@ namespace FreeSilverlightChart
     /// </summary>
     protected virtual void LayoutYValueLabels()
     {
-      var gridHeight = (_chartCanvas.Height - _marginTop - _marginBottom);
+      var gridHeight = (_chartCanvas.ActualHeight - _marginTop - _marginBottom);
 
       if (_isPerspective)
         gridHeight -= _YOFFSET_PERSPECTIVE;
@@ -1101,7 +1101,7 @@ namespace FreeSilverlightChart
     {
 
       bool animate = (_animationDuration > 0);
-      double width = _chartCanvas.Width, height = _chartCanvas.Height;
+      double width = _chartCanvas.Width, height = _chartCanvas.ActualHeight;
       double gridWidth = (width - _marginLeft - _marginRight);
       double gridHeight = (height - _marginTop - _marginBottom);
 

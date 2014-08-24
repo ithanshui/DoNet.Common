@@ -1,10 +1,7 @@
-F:\项目\jiamao\DoNet.Common\DoNet.Common\obj\Debug\ResolveAssemblyReference.cache
-F:\项目\jiamao\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.pdb
-F:\项目\jiamao\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.dll
-F:\项目\jiamao\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.pdb
-D:\项目\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.dll
-D:\项目\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.pdb
-D:\项目\DoNet.Common\DoNet.Common\obj\Debug\ResolveAssemblyReference.cache
-D:\项目\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.dll
-D:\项目\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\bin\Debug\DoNet.Common.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\bin\Debug\System.Json.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.dll
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.pdb
+D:\微云网盘\273389528\项目\DoNet.Common\DoNet.Common\obj\Debug\DoNet.Common.csprojResolveAssemblyReference.cache

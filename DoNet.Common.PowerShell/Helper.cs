@@ -16,7 +16,7 @@ namespace DoNet.Common.PowerShell
     /// <summary>
     ///  PowerShell操作类
     /// </summary>
-    public class ScriptRunner
+    public static class ScriptRunner
     {
         /// <summary>
         /// 执行单条脚本
@@ -32,7 +32,7 @@ namespace DoNet.Common.PowerShell
         /// 执行单条脚本
         /// </summary>
         /// <param name="script">脚本</param>
-        /// <param name="dataReader">民步消息阅读器</param>
+        /// <param name="dataReader">异步消息阅读器</param>
         /// <returns></returns>
         public static IEnumerable<object> RunScript(string script, EventHandler<PSEventArg> dataReader)
         {
@@ -204,7 +204,7 @@ namespace DoNet.Common.PowerShell
                             arg.Value = reader.Read();
                             foreach (var handler in _readerHandlers)
                             {
-                                handler.BeginInvoke(sender, arg, null, null);//异步执行消息回调
+                                if (handler != null) handler.BeginInvoke(sender, arg, null, null);//异步执行消息回调
                             }
                         };
                     }

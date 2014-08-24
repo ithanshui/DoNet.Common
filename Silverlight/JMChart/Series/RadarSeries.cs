@@ -16,8 +16,6 @@ namespace JMChart.Series
     /// </summary>
     public class RadarSeries:ISeries
     {
-        const int AnimateDurtion = 1000;
-
         public RadarSeries(RadarCanvas canvas)
             :base(canvas)
         { 
@@ -28,7 +26,7 @@ namespace JMChart.Series
         /// 生成当前线条
         /// </summary>      
         /// <returns></returns>
-        public override Shape CreatePath()
+        public override System.Collections.Generic.IEnumerable<Shape> CreatePath()
         {
             if (storyboard != null) storyboard.Stop();
 
@@ -36,13 +34,14 @@ namespace JMChart.Series
             var index = 0;
             if (canvas.IsAnimate) this.storyboard = new Storyboard();
 
-            var path = CurrentPath as Path;
-            if (path == null) CurrentPath = path = new Path();
+            Path path = Shaps.Count > 0 ? Shaps[0] as Path : new Path();
+            if (Shaps.Count == 0) Shaps.Add(path);
 
-            if (canvas.IsFillShape) CurrentPath.Fill = this.Fill;
+            if (canvas.IsFillShape) path.Fill = this.Fill;
+            System.Windows.Controls.Canvas.SetZIndex(path, Common.BaseParams.ShapZIndex);
 
-            CurrentPath.StrokeThickness = canvas.LineWidth;
-            CurrentPath.Stroke = this.Stroke;
+            path.StrokeThickness = canvas.LineWidth;
+            path.Stroke = this.Stroke;
 
             var geo = path.Data == null ? new PathGeometry() : path.Data as PathGeometry;
             path.Data = geo;
@@ -60,27 +59,35 @@ namespace JMChart.Series
             }
 
             if (canvas.IsAnimate) this.storyboard = new Storyboard();
+            if (Points == null) Points = new System.Collections.ObjectModel.ObservableCollection<Model.DataPoint>();
+            Points.Clear();
 
             //起始点和线段点要分开处理
             foreach (var a in canvas.Axises)
             {
-                if (a.AType != AxisType.YRadar) continue;
-                var axis = a as RadarAxis;
+                if (a.AType != Axis.AxisType.YRadar) continue;
+                var axis = a as Axis.RadarAxis;
+
+                var p = new Model.DataPoint();
+                Points.Add(p);
 
                 //获取当前点的值
-                var v = this.GetNumberValue(a.BindName);
-                var r = a.Step * (v - a.MinValue);
+                p.NumberValue = this.GetNumberValue(a.BindName);
+                var r = a.Step * (p.NumberValue.Value - a.MinValue);
 
                 //生成提示信息
-                var tooltip = CreateTooltip(a.BindName, v.ToString());
+                var tooltip = CreateTooltip(a.BindName);
 
                 //目标点
-                var targetPoint = new Point(canvas.Center.X + axis.RotateCos * r, canvas.Center.Y + axis.RotateSin * r);
+                p.Position = new Point(canvas.Center.X + axis.RotateCos * r, canvas.Center.Y + axis.RotateSin * r);
 
+                var point = AddPoint(p.Position, 10, tooltip,p);
                 if (canvas.IsAnimate)
                 {
+                    point.Visibility = Visibility.Collapsed;
+
                     var anima = new PointAnimation();
-                    anima.To = targetPoint;
+                    anima.To = p.Position;
                     anima.Duration = TimeSpan.FromMilliseconds(AnimateDurtion);
 
                     if (index != 0)
@@ -103,7 +110,7 @@ namespace JMChart.Series
                     anima.Completed += new EventHandler((object sender, EventArgs e) =>
                     {
                         var panima = sender as PointAnimation;
-                        AddPoint(panima.To.Value, 10, tooltip);
+                        point.Visibility = Visibility.Visible;
                     });
 
                     this.storyboard.Children.Add(anima);
@@ -113,20 +120,17 @@ namespace JMChart.Series
                     if (index != 0)
                     {
                         var seg = new LineSegment();
-                        seg.Point = targetPoint;
+                        seg.Point = p.Position;
                         fig.Segments.Add(seg);
-
                     }
                     else
                     {
-                        fig.StartPoint = targetPoint;
+                        fig.StartPoint = p.Position;
                         index++;
                     }
-
-                    AddPoint(targetPoint, 10, tooltip);
                 }
             }
-            return CurrentPath;
+            return base.CreatePath();
         }
     }
 }

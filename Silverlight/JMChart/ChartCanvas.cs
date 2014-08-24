@@ -23,10 +23,11 @@ namespace JMChart
         Right,
         Bottom
     }
+
     /// <summary>
     /// 基础画布
     /// </summary>
-    public abstract class ChartCanvas
+    public class ChartCanvas
     {
         public ChartCanvas() {
             init();
@@ -38,15 +39,22 @@ namespace JMChart
             Parent = parent;
         }
 
+
+        /// <summary>
+        /// 图的边距
+        /// </summary>
+        internal Thickness Margin = new Thickness(25, 10, 10, 10);
+
         /// <summary>
         /// 初始化默认值
         /// </summary>
-        private void init() {           
+        protected virtual void init() {           
             HorizontalCount = 3;
             VerticalCount = 5;
             LineWidth = 1;
-            ForeColor = new SolidColorBrush(Colors.Black);
-            Axises = new ObservableCollection<IAxis>();
+            ForeColor = new SolidColorBrush(Color.FromArgb(100,0,0,0));
+            DashColor = new SolidColorBrush(Color.FromArgb(100, 49, 49, 49));
+            Axises = new ObservableCollection<Axis.IAxis>();
             Serieses = new ObservableCollection<Series.ISeries>();
 
             IsAnimate = true;
@@ -56,6 +64,8 @@ namespace JMChart
             LegendPanel.Margin = new Thickness(10);
 
             LegendSize = new Size(100,100);
+
+            IsDrawBaseLine = true;
         }
 
         /// <summary>
@@ -63,12 +73,13 @@ namespace JMChart
         /// </summary>
         protected internal Color[] SeriesColors = new Color[] 
         { 
-            Colors.Green,  
-            Colors.Orange,
+            Color.FromArgb(255,224,41,41), 
+            Color.FromArgb(255,51,153,255),            
+            Colors.Orange,            
             Colors.Blue, 
-            Colors.Red,  
-             Color.FromArgb(255,116,192,211),
-             Colors.Yellow,
+            Colors.Green,  
+            Colors.Yellow,
+            Color.FromArgb(255,116,192,211),            
             Colors.Purple,
             Colors.Magenta,
             Colors.Brown
@@ -97,6 +108,10 @@ namespace JMChart
         /// 基线颜色
         /// </summary>
         public Brush ForeColor { get; set; }
+        /// <summary>
+        /// 虚线颜色
+        /// </summary>
+        protected Brush DashColor { get; set; }
 
         /// <summary>
         /// 是否为封闭的图形
@@ -104,14 +119,22 @@ namespace JMChart
         public bool IsFillShape { get; set; }
 
         /// <summary>
+        /// 是否画基线
+        /// </summary>
+        public bool IsDrawBaseLine { get; set; }
+
+        /// <summary>
         /// 所有轴
         /// </summary>
-        public ObservableCollection<IAxis> Axises { get; internal set; }
+        public ObservableCollection<Axis.IAxis> Axises { get; internal set; }
 
         /// <summary>
         /// 线或图信息
         /// </summary>
-        public ObservableCollection<Series.ISeries> Serieses { get; set; }
+        public ObservableCollection<Series.ISeries> Serieses { 
+            get; 
+            internal set; 
+        }
 
         object dataContext;
         /// <summary>
@@ -133,32 +156,11 @@ namespace JMChart
         /// <param name="data"></param>
         internal virtual void InitSeries(object data)
         {
-            if (Serieses == null) Serieses = new ObservableCollection<Series.ISeries>();
-            else Serieses.Clear();            
+            if (Serieses != null)
+            {
+                foreach (var s in Serieses) s.DataContext = DataContext;
+            }
         }
-
-        /// <summary>
-        /// 绑定到Y轴的属性名
-        /// </summary>
-        public string[] YValueNames { get; set; }
-
-        /// <summary>
-        /// 点的提示说明格式
-        /// #Y=当前值，#YName=当前Y轴名称,#C{列名}=表示绑定当前数据对象的指定列值
-        /// </summary>
-        public string[] ItemLabels { get; set; }
-
-        /// <summary>
-        /// 图例格式，
-        /// 默认为字段名
-        /// </summary>
-        public string LegendLabel { get; set; }
-
-
-        /// <summary>
-        /// 显示在Y轴附上的标签
-        /// </summary>
-        public string[] YLabels { get; set; }
 
         /// <summary>
         /// 宽
@@ -191,24 +193,19 @@ namespace JMChart
         /// <summary>
         /// 横线条数
         /// </summary>
-        public int HorizontalCount
+        internal int HorizontalCount
         {
             get;
             set;
         }
 
-        int vcount = 0;
         /// <summary>
         /// 纵线条数
         /// </summary>
-        public int VerticalCount { get {
-            if (YValueNames != null)
-            {
-                return YValueNames.Length;
-            }
-            return vcount;
-        }
-            set { vcount = value; }
+        internal int VerticalCount
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -267,8 +264,10 @@ namespace JMChart
         /// <summary>
         /// 展现
         /// </summary>
-        public virtual void Draw()
+        public virtual void Draw(bool isClear = true)
         {
+            if (isClear) Reset();
+
             foreach (var c in Children)
             {
                 if (c is FrameworkElement)
@@ -289,12 +288,30 @@ namespace JMChart
             }
 
             this.LegendPanel.Children.Clear();
+
             ///处理图表
-            foreach (var item in this.Serieses)
+            for (var i = this.Serieses.Count - 1; i > -1; i--)
             {
+                var item = this.Serieses[i];
+
+                if (item.Stroke == null || item.Fill == null)
+                {
+                    var color = i < SeriesColors.Length ? SeriesColors[i] : SeriesColors[i % SeriesColors.Length];
+
+                    if (item.Stroke == null)
+                    {
+                        item.Stroke = new SolidColorBrush(color);
+                    }
+
+                    if (item.Fill == null)
+                    {
+                        color.A = 60;
+                        item.Fill = new SolidColorBrush(color);
+                    }
+                }
                 item.Draw();
 
-                var legend=item.CreateLegend();
+                var legend = item.CreateLegend();
                 if (legend != null)
                 {
                     this.LegendPanel.Children.Add(legend);
@@ -311,11 +328,11 @@ namespace JMChart
             if (!Children.Contains(fe))
             {
                 Children.Add(fe);
+            }
 
-                if (fe.Parent == null && this.Parent != null && !this.Parent.Children.Contains(fe))
-                {
-                    this.Parent.Children.Add(fe);
-                }
+            if (fe.Parent == null && this.Parent != null && !this.Parent.Children.Contains(fe))
+            {
+                this.Parent.Children.Add(fe);
             }
         }
 
@@ -324,6 +341,7 @@ namespace JMChart
         /// </summary>
         protected virtual void SetCanvasLayout()
         {
+
         }
     }
 }

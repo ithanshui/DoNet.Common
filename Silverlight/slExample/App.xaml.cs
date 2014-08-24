@@ -27,6 +27,11 @@ namespace slExample
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             this.RootVisual = new MainPage();
+
+            //Silverlight.Common.Net.HttpRequest.Request("http://localhost:32363/ConfigWebService.ashx", "test", (r) =>
+            //{
+
+            //});
         }
 
         private void Application_Exit(object sender, EventArgs e)

@@ -40,7 +40,7 @@ namespace DoNet.Common.Data
         /// <returns></returns>
         public static T ConvertDataToObject<T>(System.Data.IDataReader dr, IDictionary<string, string> fieldMapping) where T : class
         {
-            return ConvertDataToObject<T>(dr, fieldMapping, null);
+            return (T)ConvertDataToObject(dr, fieldMapping, typeof(T));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace DoNet.Common.Data
         /// <returns></returns>
         public static T ConvertDataToObject<T>(System.Data.DataRow dr, IDictionary<string, string> fieldMapping) where T : class
         {
-            return ConvertDataToObject<T>(dr, fieldMapping, null);
+            return (T)ConvertDataToObject(dr, fieldMapping, typeof(T));
         }
 
         /// <summary>
@@ -63,11 +63,11 @@ namespace DoNet.Common.Data
         /// <param name="fieldMapping">字段映射,key为属性名，value为字段名</param>
         /// <param name="type">目标类型</param>
         /// <returns></returns>
-        public static T ConvertDataToObject<T>(System.Data.IDataReader dr, IDictionary<string, string> fieldMapping, Type type) where T : class
+        public static object ConvertDataToObject(System.Data.IDataReader dr, IDictionary<string, string> fieldMapping, Type type)
         {
             var data = GetDataByReader(dr);//获取当前索引的数据
 
-            return ConvertDataToObject<T>(data, fieldMapping, type);
+            return ConvertDataToObject(data, fieldMapping, type);
         }
 
         /// <summary>
@@ -78,11 +78,11 @@ namespace DoNet.Common.Data
         /// <param name="fieldMapping">字段映射,key为属性名，value为字段名</param>
         /// <param name="type">目标类型</param>
         /// <returns></returns>
-        public static T ConvertDataToObject<T>(System.Data.DataRow dr, IDictionary<string, string> fieldMapping, Type type) where T : class
+        public static object ConvertDataToObject(System.Data.DataRow dr, IDictionary<string, string> fieldMapping, Type type)
         {
             var data = GetDataByReader(dr);//获取当前索引的数据
 
-            return ConvertDataToObject<T>(data, fieldMapping, type);
+            return ConvertDataToObject(data, fieldMapping, type);
         }
 
         /// <summary>
@@ -93,33 +93,69 @@ namespace DoNet.Common.Data
         /// <param name="fieldMapping">字段映射</param>
         /// <param name="type">对象type</param>
         /// <returns></returns>
-        private static T ConvertDataToObject<T>(IDictionary<string, object> data, IDictionary<string, string> fieldMapping, Type type) where T : class
+        private static object ConvertDataToObject(IDictionary<string, object> data, IDictionary<string, string> fieldMapping, Type type)
         {
-            var returnObject = Activator.CreateInstance<T>();//生成实例对象
+            var returnObject = Activator.CreateInstance(type);//生成实例对象
 
             bool mappingExists = fieldMapping != null && fieldMapping.Count > 0;
-            if (type == null) type = typeof(T);
-
+            
             foreach (var pi in GetTypePropertys(type))
             {
-                var pn = pi.Name.ToLower();
-                if (mappingExists && !fieldMapping.ContainsKey(pn)) continue; //如果映射中没有此属性则不处理
-
-                string colName = mappingExists ? fieldMapping[pn].ToLower() : pn;//当前列名
+                //可写
+                if (!pi.CanWrite) continue;
 
                 object obj = null;
-                //读取结果集中包含当前列名。则读取
-                if (data.ContainsKey(colName))
+                if (pi.PropertyType.IsClass && pi.PropertyType != typeof(string))
                 {
-                    obj = data[colName];
+                    if (pi.PropertyType.IsGenericType || pi.PropertyType.IsArray || pi.PropertyType.IsAbstract || pi.PropertyType.IsInterface)
+                    {
+                        continue;
+                    }
+                    var mapping = new Dictionary<string, string>();
+                    if (fieldMapping != null)
+                    {
+                        //把映射 中的当前属性类的下级映射收集
+                        foreach (var d in fieldMapping)
+                        {
+                            if (d.Key.StartsWith(pi.Name + '.', StringComparison.OrdinalIgnoreCase))
+                            {
+                                mapping.Add(d.Key.Substring(pi.Name.Length + 1), d.Value);
+                            }
+                        }
+                    }
+                    obj = ConvertDataToObject(data, mapping, pi.PropertyType);
                 }
-
-                if (obj == null || obj == DBNull.Value) continue; //如果查询字段中没有则下一个
+                else
+                {
+                    var pn = pi.Name.ToLower();
+                    string colName = null;
+                    //获取对应的列名
+                    if (mappingExists)
+                    {
+                        foreach (var m in fieldMapping)
+                        {
+                            if (pn.Equals(m.Key, StringComparison.OrdinalIgnoreCase))
+                            {
+                                colName = m.Value.ToLower();
+                                break;
+                            }
+                        }
+                        //if (string.IsNullOrWhiteSpace(colName)) continue;
+                    }
+                    if (string.IsNullOrWhiteSpace(colName)) colName = pn;           
+                    //读取结果集中包含当前列名。则读取
+                    if (data.ContainsKey(colName))
+                    {
+                        obj = data[colName];
+                    }                    
+                }
+                //if (obj == null || obj == DBNull.Value) continue; //如果查询字段中没有则下一个
 
                 Reflection.ClassHelper.FastSetPropertyValue(returnObject, pi, obj, null);
             }
             return returnObject;
         }
+
 
         /// <summary>
         /// 泛型转换成DataTable

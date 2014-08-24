@@ -326,6 +326,19 @@ namespace DoNet.Common.Net
         }
 
         /// <summary>
+        /// 配置节点名称
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="endpointConfigurationName"></param>
+        /// <returns></returns>
+        public T CreateRemoteObject<T>(Binding binding,EndpointAddress address)
+        {
+            var channelFactory = new ChannelFactory<T>(binding, address);
+            var proxy = channelFactory.CreateChannel();
+            return proxy;
+        }
+
+        /// <summary>
         /// 生成远程代理对象
         /// </summary>
         /// <typeparam name="T"></typeparam>

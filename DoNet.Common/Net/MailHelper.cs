@@ -226,6 +226,10 @@ namespace DoNet.Common.Net
     public class MailUnit : IDisposable
     {
         const int DefaultSendTimeOut = 60000;           //30秒超时
+        /// <summary>
+        /// 发送完成回调
+        /// </summary>
+        public event EventHandler SendCompleteHandler;
 
         public enum State
         {
@@ -685,6 +689,10 @@ namespace DoNet.Common.Net
         private void AsyncSendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             _state = State.Done;
+            if (SendCompleteHandler != null)
+            {
+                SendCompleteHandler(this, e);
+            }
         }
     }
 }

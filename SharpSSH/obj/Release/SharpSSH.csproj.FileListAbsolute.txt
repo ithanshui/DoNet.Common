@@ -1,0 +1,7 @@
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\bin\Release\Tamir.SharpSSH.dll
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\bin\Release\DiffieHellman.dll
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\bin\Release\Org.Mentalis.Security.dll
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\obj\Release\Tamir.SharpSsh.jsch.examples.InputForm.resources
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\obj\Release\SharpSSH.csproj.GenerateResource.Cache
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\obj\Release\Tamir.SharpSSH.dll
+D:\微云网盘\273389528\项目\DoNet.Common\SharpSSH\obj\Release\SharpSSH.csprojResolveAssemblyReference.cache

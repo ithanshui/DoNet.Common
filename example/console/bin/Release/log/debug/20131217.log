@@ -1,0 +1,44 @@
+﻿[15:00:16]Request :
+[15:00:16]GetDataSet
+[15:00:16]<?xml version="1.0"?>
+<DBInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DBType>MySql</DBType>
+  <ConnectionString>server=172.27.136.16;port=3306;database=dbCfOssResult;user id=oss_epr;password=oss_epr_cf;charset=utf8;default command timeout=10</ConnectionString>
+  <IsProxy>true</IsProxy>
+  <ProxyUrl>http://eprm.ied.com/dbproxy/dbproxy.ashx</ProxyUrl>
+</DBInfo>
+[15:00:34]MySql.Data.MySqlClient.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts. ---> System.Exception: Exception of type 'System.Exception' was thrown.
+   at MySql.Data.MySqlClient.NativeDriver.Open()
+   at MySql.Data.MySqlClient.NativeDriver.Open()
+   at MySql.Data.MySqlClient.Driver.Create(MySqlConnectionStringBuilder settings)
+   at MySql.Data.MySqlClient.MySqlPool.GetPooledConnection()
+   at MySql.Data.MySqlClient.MySqlPool.TryToGetDriver()
+   at MySql.Data.MySqlClient.MySqlPool.GetConnection()
+   at MySql.Data.MySqlClient.MySqlConnection.Open()
+   at DoNet.Common.DbUtility.BaseDB.Open()
+   at DoNet.Common.DbUtility.BaseDB.GetDataSet(IDbCommand cmd)
+   at DoNet.Common.DbUtility.BaseDB.GetDataSet(String cmdText)
+   at DoNet.Common.DbUtility.Proxy.DBHelper.GetDataSet(DBInfo dbinfo, String cmdText)
+   at DoNet.Common.DbUtilityProxy.DBProxy.ProcessRequest(HttpContext context)
+[17:14:34]Request :
+[17:14:34]GetDataSet
+[17:14:34]<?xml version="1.0"?>
+<DBInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DBType>MySql</DBType>
+  <ConnectionString>server=10.167.139.19;port=3306;database=totaloapv2;user id=root;password=system;charset=utf8;pooling=true;default command timeout=10</ConnectionString>
+  <IsProxy>true</IsProxy>
+  <ProxyUrl>http://eprm.ied.com/dbproxy/dbproxy.ashx</ProxyUrl>
+</DBInfo>
+[17:14:54]MySql.Data.MySqlClient.MySqlException (0x80004005): Unable to connect to any of the specified MySQL hosts. ---> System.Exception: Exception of type 'System.Exception' was thrown.
+   at MySql.Data.MySqlClient.NativeDriver.Open()
+   at MySql.Data.MySqlClient.NativeDriver.Open()
+   at MySql.Data.MySqlClient.Driver.Create(MySqlConnectionStringBuilder settings)
+   at MySql.Data.MySqlClient.MySqlPool.GetPooledConnection()
+   at MySql.Data.MySqlClient.MySqlPool.TryToGetDriver()
+   at MySql.Data.MySqlClient.MySqlPool.GetConnection()
+   at MySql.Data.MySqlClient.MySqlConnection.Open()
+   at DoNet.Common.DbUtility.BaseDB.Open()
+   at DoNet.Common.DbUtility.BaseDB.GetDataSet(IDbCommand cmd)
+   at DoNet.Common.DbUtility.BaseDB.GetDataSet(String cmdText)
+   at DoNet.Common.DbUtility.Proxy.DBHelper.GetDataSet(DBInfo dbinfo, String cmdText)
+   at DoNet.Common.DbUtilityProxy.DBProxy.ProcessRequest(HttpContext context)
